@@ -83,25 +83,6 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             }
 
         }
-        private StringContent convertDataTableToJasonString(DataTable dt)
-        {
-            // Serialize DataTable to JSON
-            DataTable dtAdded = dt.GetChanges(DataRowState.Added);
-            string jsonAdded = JsonConvert.SerializeObject(dtAdded, Formatting.Indented);
-            DataTable dtModified = dt.GetChanges(DataRowState.Modified);
-            string jsonModified = JsonConvert.SerializeObject(dtModified, Formatting.Indented);
-            DataTable dtDeleted = dt.GetChanges(DataRowState.Deleted);
-            string jsonDeleted = JsonConvert.SerializeObject(dtDeleted, Formatting.Indented);
-
-            JsonDataTable jsonDT = new JsonDataTable();
-            jsonDT.dtAdded = jsonAdded;
-            jsonDT.dtModified = jsonModified;
-            jsonDT.dtDeleted = jsonDeleted;
-            string jsonString = JsonConvert.SerializeObject(jsonDT);
-
-            StringContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
-            return content;
-        }
         private StringContent convertDataTableToJasonString(DataTable dt, String tableName, String[] keysName)
         {
             // Serialize DataTable to JSON
