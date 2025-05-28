@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>System_prototype_for_S_S_toy_Co__4915m_Project_</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Menu\" />
+    <Folder Include="Delivery\" />
+    <Folder Include="Inventory\" />
+    <Folder Include="AfterService\" />
+    <Folder Include="MasterData\" />
+    <Folder Include="Login\" />
+    <Folder Include="ProductRequirement\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="9.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EntityModels\EntityModels.csproj" />
+  </ItemGroup>
+
+</Project>
