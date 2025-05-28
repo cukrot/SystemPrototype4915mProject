@@ -3,6 +3,16 @@
 ## 概述
 本專案包含兩個控制器類別：`TestControll` 和 `TestControll2`，位於 `System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting` 命名空間中。這兩個控制器用於處理與 Web API 的資料交互，包括取得資料 (`Get`) 和更新資料 (`Update`)。以下介紹它們的功能、差異以及使用建議。
 
+## 推薦
+**強烈建議使用 `TestControll2`**，因為：
+1. **更高的靈活性**：可以動態指定資料表名稱，無需為每個資料表建立專用端點。
+2. **更強的控制力**：支援自訂鍵（如 `customerNumber`），確保資料更新的準確性。
+3. **更好的可維護性**：通用方法設計更簡潔，減少重複程式碼，方便後續擴展。
+4. **與現有系統相容**：與 `TestControll` 的功能相容，易於替換且不會影響既有表單（如 `Form1.cs`）。
+
+若需在 `Form1.cs` 中使用 `TestControll2`，只需稍作調整即可。例如，將 `GetCustomerData` 的端點改為 `GetTableData` 並指定表名。
+
+
 ## TestControll
 ### 功能
 - **GetData**: 從指定的 API 端點 (`/api/SimpleGetAPI/`) 取得資料，回傳 `DataTable`。
@@ -46,19 +56,10 @@ int rowsUpdated = await controller.UpdateCustomerDataToAPI(dtUpdated); // 更新
 - **精確性**：支援自訂 WHERE 子句的鍵（如 `customerNumber`），確保更新操作更精準。
 - **擴展性**：進階的 `GetData` 方法允許根據表名查詢資料，適合未來功能擴展。
 
-## 推薦
-**強烈建議使用 `TestControll2`**，因為：
-1. **更高的靈活性**：可以動態指定資料表名稱，無需為每個資料表建立專用端點。
-2. **更強的控制力**：支援自訂鍵（如 `customerNumber`），確保資料更新的準確性。
-3. **更好的可維護性**：通用方法設計更簡潔，減少重複程式碼，方便後續擴展。
-4. **與現有系統相容**：與 `TestControll` 的功能相容，易於替換且不會影響既有表單（如 `Form1.cs`）。
-
-若需在 `Form1.cs` 中使用 `TestControll2`，只需稍作調整即可。例如，將 `GetCustomerData` 的端點改為 `GetTableData` 並指定表名。
 
 ## 注意事項
 - 確保 API 伺服器正確配置（如 `/api/TestAPI/` 和 `/api/SnSToyCoTest/`），以避免連線問題。
 - 在使用 `UpdateData` 時，確認 `keysName` 陣列包含正確的主鍵欄位，以避免更新錯誤。
-- 建議在正式環境中加入日誌記錄和錯誤處理，增強程式穩定性。
 
 ## 聯絡
-如有任何問題或需要進一步支援，請聯繫專案負責人或開發團隊。
+如有任何問題或需要進一步支援，請使用 discord 聯繫專案負責人或開發團隊。
