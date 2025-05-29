@@ -1,7 +1,7 @@
 # 基於 TestControll2 的控制器與 UI 實現
 
 ## 概述
-`TestControll2` 是繼承自 `SubSystemController` 的控制器，位於 `System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting` 命名空間。它通過指定表名和主鍵來操作數據表，適用於靈活的表驅動場景。UI 實現參考 `Form2.cs`。
+`TestControll2` 是繼承自 `SubSystemController` 的控制器，位於 `System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting` 命名空間。它通過指定表名和主鍵來操作數據表，適用於靈活的表驅動場景。UI 實現參考 `Form2.cs`。 
 
 ## 建立控制器
 1. **創建控制器類**：
