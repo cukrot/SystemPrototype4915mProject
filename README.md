@@ -1,120 +1,72 @@
-# TestControll 和 TestControll2 使用指南
+# [項目名稱]
 
-## 概述
-本專案包含兩個控制器類別：`TestControll` 和 `TestControll2`，位於命名空間 `System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting` 中。這兩個控制器用於與後端 API 交互，處理資料的獲取和更新操作，適用於不同的表單（如 `Form1.cs` 和 `Form2.cs`）。
+歡迎參與 [項目名稱] 的開發！本文件提供基本指引，確保團隊協作順暢並保護 `master` 分支。請仔細閱讀以下步驟，特別是在克隆倉庫後如何創建自己的分支。
 
-以下將介紹這兩個控制器的功能、用法，並推薦使用 `TestControll2` 的原因。
+## 快速開始
 
----
+### 1. 克隆倉庫
+- **命令行（Git）**：
+  ```bash
+  git clone https://github.com/[你的用戶名]/[倉庫名稱].git
+  cd [倉庫名稱]
+  ```
+- **GitHub Desktop**：
+  1. 打開 GitHub Desktop。
+  2. 點擊「File」 > 「Clone Repository」。
+  3. 選擇本倉庫（[用戶名]/[倉庫名稱]），點擊「Clone」。
+  4. 選擇本地保存路徑，完成克隆。
 
-## TestControll
+### 2. **重要：創建自己的分支**
+- 請勿直接在 `master` 分支上編輯或提交代碼！`master` 分支受到保護，所有更改必須通過 Pull Request (PR) 合併。
+- **為每個功能或修復創建新分支**：
+  - **命名規範**：使用 `feature/你的名字-功能`（如 `feature/john-login-page`）或 `bugfix/問題描述`（如 `bugfix/fix-nav-bar`）。
+  - **命令行（Git）**：
+    ```bash
+    # 確保在 master 分支並更新
+    git checkout master
+    git pull origin master
 
-### 功能
-- **資料獲取**：透過 `GetData` 方法從指定 API 端點獲取資料，返回 `DataTable`。
-- **資料更新**：透過 `UpdateData` 方法將更新的 `DataTable` 序列化為 JSON 並發送至 API，執行新增、修改或刪除操作。
-- **專用方法**：為 `Form1.cs` 提供了兩個範例方法：`GetCustomerData` 和 `UpdateCustomerDataToAPI`，展示如何使用通用方法。
+    # 創建並切換到新分支
+    git checkout -b feature/你的名字-功能
+    ```
+  - **GitHub Desktop**：
+    1. 確保當前分支是 `master`（在「Current Branch」下拉菜單確認）。
+    2. 點擊「Branch」 > 「New Branch」。
+    3. 輸入分支名稱（例如 `feature/你的名字-功能`），點擊「Create Branch」。
+    4. 點擊「Publish Branch」將新分支推送到 GitHub。
 
-### API 路徑
-- 基礎 API 路徑：`/api/SimpleGetAPI/`（用於獲取資料）
-- 公司 API 路徑：`/api/SnSToyCo_API/`（用於更新資料）
-- 支援的端點：`GetCustomerData` 和 `UpdateCustomerDataTest`
+### 3. 提交更改
+- 在你的分支上編輯代碼並提交：
+  - **命令行（Git）**：
+    ```bash
+    git add .
+    git commit -m "描述你的更改，例如：添加登錄頁面"
+    git push origin feature/你的名字-功能
+    ```
+  - **GitHub Desktop**：
+    1. 在「Changes」標籤中查看你的更改。
+    2. 輸入提交信息（例如「添加登錄頁面」）。
+    3. 點擊「Commit to feature/你的名字-功能」。
+    4. 點擊「Push origin」將更改推送到 GitHub。
 
-### 使用方法
-1. **獲取資料**：
-   - 呼叫 `GetData` 方法並指定端點，例如：
-     ```csharp
-     DataTable dt = await testControll.GetData("GetCustomerData");
-     ```
-   - 範例方法 `GetCustomerData` 已封裝此邏輯，可直接使用：
-     ```csharp
-     DataTable dt = await testControll.GetCustomerData();
-     ```
+### 4. 創建 Pull Request (PR)
+- 完成工作後，提交 Pull Request 讓團隊審核：
+  1. 訪問 GitHub 上的倉庫頁面。
+  2. 點擊「Pull requests」標籤，然後點擊「New pull request」。
+  3. 選擇你的分支（`feature/你的名字-功能`）作為「compare」，`master` 作為「base」。
+  4. 填寫 PR 標題和描述（說明更改內容，關聯 Issue 可選）。
+  5. 點擊「Create pull request」。
+- 等待審核，根據反饋修改代碼（直接在你的分支提交新更改，PR 會自動更新）。
 
-2. **更新資料**：
-   - 準備一個包含新增、修改或刪除資料的 `DataTable`。
-   - 呼叫 `UpdateData` 方法並指定端點，例如：
-     ```csharp
-     int rowsUpdated = await testControll.UpdateData(dtUpdated, "UpdateCustomerDataTest");
-     ```
-   - 範例方法 `UpdateCustomerDataToAPI` 已封裝此邏輯：
-     ```csharp
-     int rowsUpdated = await testControll.UpdateCustomerDataToAPI(dtUpdated);
-     ```
+### 5. 注意事項
+- **不要直接推送更改到 `master`**，否則會被拒絕（已設置分支保護）。
+- 為每個獨立功能或修復創建新分支，避免在同一分支上堆積多個不相關更改。
+- 提交 PR 時，清晰描述你的更改，方便審核。
+- 如果使用 GitHub Desktop，定期點擊「Fetch origin」檢查遠端更新。
 
-### 注意事項
-- 確保 `APICaller` 類別已正確實作並可用。
-- 異常處理已在方法中實現，呼叫時需使用 `try-catch` 捕獲可能的錯誤。
-- 僅支援預定義的端點，擴展性較低。
+## 更多資源
+- **[子系統控制器說明](aboutSubSystemController.md)**：請閱讀 `aboutSubSystemController.md` 文件，了解子系統控制器的詳細資訊。
 
----
-
-## TestControll2（推薦）
-
-### 功能
-- **資料獲取**：提供兩個 `GetData` 方法：
-  - 基本版本：與 `TestControll` 類似，透過端點獲取資料。
-  - 進階版本：允許指定表單名稱（`tableName`），提供更靈活的資料查詢。
-- **資料更新**：透過 `UpdateData` 方法，支援指定表單名稱（`tableName`）和主鍵名稱（`keysName`），使更新操作更通用。
-- **專用方法**：為 `Form2.cs` 提供了範例方法：`GetCustomerData` 和 `UpdateCustomerDataToAPI`，展示如何使用進階功能。
-
-### API 路徑
-- 測試 API 路徑：`/api/TestAPI/`（用於獲取和更新資料）
-- 公司 API 路徑：`/api/SnSToyCoTest/`（備用）
-- 支援的端點：`GetTableData`（用於獲取資料）、`UpdateData`（用於更新資料）
-
-### 使用方法
-1. **獲取資料**：
-   - 使用基本 `GetData` 方法：
-     ```csharp
-     DataTable dt = await testControll2.GetData("GetTableData");
-     ```
-   - 使用進階 `GetData` 方法，指定表單名稱：
-     ```csharp
-     DataTable dt = await testControll2.GetData("GetTableData", "customers");
-     ```
-   - 範例方法 `GetCustomerData` 已封裝進階邏輯：
-     ```csharp
-     DataTable dt = await testControll2.GetCustomerData();
-     ```
-
-2. **更新資料**：
-   - 準備一個包含新增、修改或刪除資料的 `DataTable`。
-   - 呼叫 `UpdateData` 方法，指定表單名稱和主鍵名稱：
-     ```csharp
-     String[] keysName = { "customerNumber" };
-     int rowsUpdated = await testControll2.UpdateData(dtUpdated, "customers", keysName);
-     ```
-   - 範例方法 `UpdateCustomerDataToAPI` 已封裝此邏輯：
-     ```csharp
-     int rowsUpdated = await testControll2.UpdateCustomerDataToAPI(dtUpdated);
-     ```
-
-### 為什麼推薦 TestControll2？
-- **更高的靈活性**：支援指定表單名稱和主鍵名稱，適用於多種表單和資料結構。
-- **更通用**：`GetData` 和 `UpdateData` 方法允許動態指定參數，減少硬編碼端點的需求。
-- **更好的擴展性**：透過表單名稱和主鍵的配置，易於適應新的資料表或 API 端點。
-- **一致的 API 路徑**：使用單一測試 API 路徑（`/api/TestAPI/`），簡化配置和管理。
-
----
-
-## 擴展建議
-若需擴展這兩個控制器，建議：
-1. **使用 TestControll2 作為基礎**：
-   - 複製 `TestControll2` 的結構，根據新表單的需求新增專用方法。
-   - 利用 `GetData` 和 `UpdateData` 的進階版本，動態傳入表單名稱和主鍵名稱。
-2. **新增端點**：
-   - 在 `endpoints` 陣列中添加新的端點名稱。
-   - 確保後端 API 支援新增的端點。
-3. **異常處理**：
-   - 根據專案需求，擴展異常處理邏輯，例如記錄錯誤日誌或顯示用戶友好的錯誤訊息。
-4. **API 配置**：
-   - 若需要切換不同的 API 環境（如測試或生產環境），可在控制器中新增配置參數。
-
----
-
-## 注意事項
-- 確保 `APICaller` 和 `JsonDataTable` 類別已正確實作並包含在專案中。
-- 使用 `TestControll2` 時，需提供正確的表單名稱和主鍵名稱，否則可能導致 API 請求失敗。
-- 測試所有 API 請求，確保後端端點與控制器的配置一致。
-
-若有任何問題，請聯繫專案負責人或參考程式碼中的註解。
+## 問題與幫助
+- 遇到 Git 或 GitHub Desktop 問題？請聯繫 [你的名字] 或在倉庫的 Issues 頁面提交問題。
+- 推薦閱讀：[GitHub 官方 Pull Request 指南](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)
