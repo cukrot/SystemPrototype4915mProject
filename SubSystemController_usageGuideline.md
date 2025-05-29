@@ -4,8 +4,8 @@
 `SubSystemController` 是用於與 API 交互的核心類，負責處理數據表的獲取和更新操作。它位於 `System_prototype_for_S_S_toy_Co__4915m_Project_` 命名空間中，支援 JSON 序列化和異步 API 調用。
 
 ## 如何基於 TestControll 和 TestControll2 建立 Controller(your SubSytem) 和 UI
-- **[基於 TestControll 的控制器與 UI 實現](基於 TestControll 的控制器與 UI 實現.md)**
-- **[基於 TestControll2 的控制器與 UI 實現](基於 TestControll2 的控制器與 UI 實現.md)**
+- **[基於 TestControll 的控制器與 UI 實現](Explainations_of_TestControll.md)**
+- **[基於 TestControll2 的控制器與 UI 實現](Explainations_of_TestControll.md)**
 
 ## 如何使用
 1. **創建實例**：

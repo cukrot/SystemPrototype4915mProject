@@ -65,7 +65,7 @@
 - 如果使用 GitHub Desktop，定期點擊「Fetch origin」檢查遠端更新。
 
 ## 更多資源
-- **[SubSystemController 使用指南](SubSystemController 使用指南.md)**：請閱讀 `SubSystemController 使用指南.md` 文件，了解子系統控制器的詳細資訊。
+- **[SubSystemController 使用指南](SubSystemController_usageGuideline.md)**：請閱讀 `SubSystemController 使用指南.md` 文件，了解子系統控制器的詳細資訊。
 
 ## 問題與幫助
 - 遇到 Git 或 GitHub Desktop 問題？請使用Discord聯繫 專案負責人 或在倉庫的 Issues 頁面提交問題。
