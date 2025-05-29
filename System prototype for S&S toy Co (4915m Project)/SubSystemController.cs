@@ -16,7 +16,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
         private String companyApi = "/api/SnSToyCoTest/";
         private String api;
         
-        public SubSystemController() { api = testApi;}
+        public SubSystemController() { api = companyApi;}
         public SubSystemController(String apiString) { this.api = apiString; }
         public void setApi(String apiString) { this.api = apiString; }
         public async Task<DataTable> GetTableData(String tableName)
