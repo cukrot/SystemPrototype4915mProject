@@ -8,7 +8,7 @@
 ## 快速建立 Controller(your SubSytem) 和 UI 基於 TestControll 和 TestControll2 
 以下兩個文件，分別介紹如何基於 TestControll 和 TestControll2 建立控制器和 UI 來 **獲得和更新數據表**。
 - **[基於 TestControll 的控制器與 UI 實現](Explainations_of_TestControll.md)**
-- **[基於 TestControll2 的控制器與 UI 實現](Explainations_of_TestControll.md)** (推薦)
+- **[基於 TestControll2 的控制器與 UI 實現](Explainations_of_TestControll2.md)** (推薦)
 
 ## 如何使用
 1. **創建實例**：
