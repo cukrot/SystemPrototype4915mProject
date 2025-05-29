@@ -1,6 +1,6 @@
-# [項目名稱]
+# SystemPrototype4915mProject
 
-歡迎參與 [項目名稱] 的開發！本文件提供基本指引，確保團隊協作順暢並保護 `master` 分支。請仔細閱讀以下步驟，特別是在克隆倉庫後如何創建自己的分支。
+歡迎參與 這個項目 的開發！本文件提供基本指引，確保團隊協作順暢並保護 `master` 分支。請仔細閱讀以下步驟，特別是在克隆倉庫後如何創建自己的分支。
 
 ## 快速開始
 
@@ -65,8 +65,9 @@
 - 如果使用 GitHub Desktop，定期點擊「Fetch origin」檢查遠端更新。
 
 ## 更多資源
-- **[子系統控制器說明](aboutSubSystemController.md)**：請閱讀 `aboutSubSystemController.md` 文件，了解子系統控制器的詳細資訊。
+- **[SubSystemController 使用指南](SubSystemController_usageGuideline.md)**：請閱讀 `SubSystemController_usageGuideline.md` 文件，了解子系統控制器的詳細資訊。
+
 
 ## 問題與幫助
-- 遇到 Git 或 GitHub Desktop 問題？請聯繫 [你的名字] 或在倉庫的 Issues 頁面提交問題。
+- 遇到 Git 或 GitHub Desktop 問題？請使用Discord聯繫 專案負責人 或在倉庫的 Issues 頁面提交問題。
 - 推薦閱讀：[GitHub 官方 Pull Request 指南](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)
