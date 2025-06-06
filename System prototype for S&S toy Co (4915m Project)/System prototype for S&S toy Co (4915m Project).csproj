@@ -10,13 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Menu\" />
-    <Folder Include="Delivery\" />
-    <Folder Include="Inventory\" />
     <Folder Include="AfterService\" />
-    <Folder Include="MasterData\" />
-    <Folder Include="Login\" />
-    <Folder Include="ProductRequirement\" />
   </ItemGroup>
 
   <ItemGroup>

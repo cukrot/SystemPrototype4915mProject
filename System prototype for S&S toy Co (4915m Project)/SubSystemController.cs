@@ -13,7 +13,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
     {
         private String simpleApi = "/api/SimpleGetAPI/";
         private String testApi = "/api/TestAPI/";
-        private String companyApi = "/api/SnSToyCoTest/";
+        private String companyApi = "/api/SnSToyCoTestAPI/";
         private String api;
         
         public SubSystemController() { api = companyApi;}

@@ -1,4 +1,6 @@
 using System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2;
+using System_prototype_for_S_S_toy_Co__4915m_Project_.Menu;
+using System_prototype_for_S_S_toy_Co__4915m_Project_.Login;
 namespace System_prototype_for_S_S_toy_Co__4915m_Project_
 {
     internal static class Program
@@ -12,7 +14,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            Application.Run(new Login.Login());
         }
     }
 }
