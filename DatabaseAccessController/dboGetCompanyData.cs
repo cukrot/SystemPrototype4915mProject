@@ -23,6 +23,39 @@ namespace DatabaseAccessController
             String sqlCmd = "SELECT * FROM " + tableName;
             return GetData(sqlCmd);
         }
+
+        public int InsertTable(DataTable dtInserted, string tableName)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"INSERT INTO `{tableName}` (");
+            // Append column names
+            foreach (DataColumn col in dtInserted.Columns)
+            {
+                sb.Append($"`{col.ColumnName}`,");
+            }
+            sb.Length -= 2; // Remove the last comma and space
+            sb.Append(") VALUES ");
+            // Append values for each row
+            foreach (DataRow row in dtInserted.Rows)
+            {
+                sb.Append("(");
+                foreach (DataColumn col in dtInserted.Columns)
+                {
+                    sb.Append($"'{row[col]}', ");
+                }
+                sb.Length -= 2; // Remove the last comma and space
+                sb.Append("), ");
+            }
+            sb.Length -= 2; // Remove the last comma and space
+            return BatchUpdate(sb.ToString());
+        }
+
+        public DataTable SearchData(string filterString)
+        {
+            String sqlCmd = "SELECT * FROM customers WHERE " + filterString + ";";
+            return GetData(sqlCmd);
+        }
+
         public int UpdateCustomerData(DataTable dtUpdated)
         {
             StringBuilder sb = new StringBuilder();

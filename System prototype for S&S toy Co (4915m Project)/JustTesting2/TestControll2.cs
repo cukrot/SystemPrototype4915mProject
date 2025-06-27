@@ -14,6 +14,8 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
 {
     public class TestControll2 : SubSystemController
     {
+        DataTable customers;
+        DataColumn[] customersCols;
         public TestControll2() { setApi("/api/TestAPI/"); }
         //recommend to see useable api in SubSystemController.cs
 
@@ -31,6 +33,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             try
             {
                 dt = await GetTableData("customers"); //specify table name
+                customers = dt; //store the DataTable for later use
                 //Or you can use GetData()
                 //dt = await GetData("GetTableData", "customers"); //specify endpoint & table name
             }
@@ -46,6 +49,19 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             String[] keysName = {"customerNumber" }; //specify keys
             int rowsUpdated = await UpdateData(dtUpdated, "customers", keysName); //table name ane keysName
             return rowsUpdated;
+        }
+
+        public DataColumn[] GetColumns() //Assuming the method returns a list of column names from "customers" table
+        {
+            if (customers != null && customers.Columns.Count > 0)
+            {
+                customersCols = customers.Columns.Cast<DataColumn>().ToArray();
+                return customersCols;
+            }
+            else
+            {
+                throw new Exception("No columns found in the customers DataTable.");
+            }
         }
     }
 }

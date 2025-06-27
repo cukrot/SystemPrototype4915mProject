@@ -68,13 +68,46 @@ namespace WebAPI.Controllers
         {
             try
             {
-
                 dboGetCompanyData dboGetCompanyData = new dboGetCompanyData(_configuration["ConnectionStrings_of_snstoycotest"]);
                 DataTable dtResult = dboGetCompanyData.GetTableData(tableName);
 
                 // Convert DataTable to JSON string
                 string jsonString = JsonConvert.SerializeObject(dtResult);
 
+                // Return JSON string
+                return jsonString;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost("InsertTableData")]
+        public int InsertTableData([FromBody] JsonDataTable json)
+        {
+            try
+            {
+                DataTable dtInserted = JsonConvert.DeserializeObject<DataTable>(json.dtAdded);
+                String tableName = JsonConvert.DeserializeObject<String>(json.tableName);
+                dboGetCompanyData dboGetCompanyData = new dboGetCompanyData(_configuration["ConnectionStrings_of_snstoycotest"]);
+                int rowsInserted = dboGetCompanyData.InsertTable(dtInserted, tableName);
+                return rowsInserted;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [HttpPut("SearchData")]
+        public string SearchData([FromBody] String filterString)
+        {
+            try
+            {
+                dboGetCompanyData dboGetCompanyData = new dboGetCompanyData(_configuration["ConnectionStrings_of_snstoycotest"]);
+                DataTable dtResult = dboGetCompanyData.SearchData(filterString);
+                // Convert DataTable to JSON string
+                string jsonString = JsonConvert.SerializeObject(dtResult);
                 // Return JSON string
                 return jsonString;
             }
