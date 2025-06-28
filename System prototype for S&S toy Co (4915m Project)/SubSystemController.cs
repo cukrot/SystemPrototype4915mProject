@@ -35,6 +35,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
                 StringContent content = new StringContent(jsonTableName, Encoding.UTF8, "application/json");
                 String jsonString = await apiCaller.GetApiResponse((api + "GetTableData"), content);
                 dt = JsonConvert.DeserializeObject<DataTable>(jsonString);
+
             }
             catch (Exception ex)
             {
@@ -182,21 +183,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
             filterList.Clear();
         }
 
-        public void AddFilter(string column, string value)
-        {
-            if (!string.IsNullOrEmpty(filterExpression))
-                filterExpression += " AND ";
 
-            var col = customer?.Columns[column];
-            if (col != null && col.DataType == typeof(string))
-            {
-                filterExpression += $"{column} LIKE '%{value.Replace("'", "''")}%'";
-            }
-            else
-                filterExpression += $"{column} = {value}";
-
-            filterList.Add($"{column}: {value}");
-        }
 
 
 
@@ -240,6 +227,22 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
                             return $"{colName} = {val}";
                     }));
             }
+        }
+
+        public void AddFilterItem(string column, string value, DataTable dt)
+        {
+            if (!string.IsNullOrEmpty(filterExpression))
+                filterExpression += " AND ";
+
+            var col = dt?.Columns[column];
+            if (col != null && col.DataType == typeof(string))
+            {
+                filterExpression += $"{column} LIKE '%{value.Replace("'", "''")}%'";
+            }
+            else
+                filterExpression += $"{column} = {value}";
+
+            filterList.Add($"{column}: {value}");
         }
     }
 }
