@@ -33,30 +33,22 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
             {
                 DataTable dt = await controll.GetCustomerData();
                 dataGridView1.DataSource = dt;
-                dt.AcceptChanges();
-                //Set the sbFilter to the columns of the DataTable
                 sbFilter.Items.Clear();
-
-                filterExpression = string.Empty;
                 sbSelFilter.Items.Clear();
                 foreach (DataColumn column in dt.Columns)
-                {
                     sbFilter.Items.Add(column.ColumnName);
-                }
                 txtFilter.Visible = false;
                 btnFilterAdd.Visible = false;
             }
             catch (Exception ex)
             {
-                // Log any other exceptions
                 MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
 
         private void clearFilterExpression()
         {
-            // Clear the filter expression and selected filters
-            filterExpression = string.Empty;
+            controll.ClearFilter();
             sbSelFilter.Items.Clear();
             sbFilter.Items.Clear();
             sbSelFilter.Text = string.Empty;
@@ -64,6 +56,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
             txtFilter.Visible = false;
             btnFilterAdd.Visible = false;
         }
+
         private void addFilter(string filterColumn, string filterValue)     //Append filterExpression and sbSelFilter with the new filter, then show the result in the DataGridView
         {
             // Append the filter expression and add to sbSelFilter
@@ -133,9 +126,9 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
             {
                 string filterColumn = sbFilter.SelectedItem.ToString();
                 string filterValue = txtFilter.Text;
-                //Append the filter expression
-                //and add to sbSelFilter, then show the result in the DataGridView
-                addFilter(filterColumn, filterValue);
+                controll.AddFilter(filterColumn, filterValue);
+                dataGridView1.DataSource = controll.GetFilteredCustomerData();
+                UpdateFilterUI();
             }
             else
             {
@@ -160,92 +153,51 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
 
         private void btnFindByID_Click(object sender, EventArgs e)
         {
-            // Check if the text in txtFindByID is numberic or not
             string id = txtFindByID.Text;
             if (string.IsNullOrWhiteSpace(id))
             {
                 MessageBox.Show("Please enter a Customer ID to search.");
                 return;
             }
-            else if (!int.TryParse(id, out _))
+
+            DataTable result = controll.FindCustomerByID(id);
+
+            if (result != null && result.Rows.Count > 0)
             {
-                MessageBox.Show("Please enter a valid numeric Customer ID.");
-                return;
-            }
-
-            //First filter with id by using DataView.RowFilter
-            //If result is not empty
-            //Check if the DataGridView is filtered or not,
-            //then clear the existed filter expression and selected filters by calling clearFilterExpression().
-            //Finally, set the filter expression to the new filter expression by calling addFilter() method and show the result in the DataGridView.
-            //If result is empty then show a message
-
-            DataTable dt = (DataTable)dataGridView1.DataSource;
-            DataView dv = new DataView(dt.Copy());
-
-            // Assuming first column is id column, get the first column name
-            string idColumn = dt.Columns[0].ColumnName;
-            string IDFilterExpression = $"{idColumn} = {id}";
-
-            dv.RowFilter = IDFilterExpression; // Filter the DataView by ID
-
-            if (dv.Count > 0)   // Check if the filtered DataView has any rows
-            {
-                // Clear the existing filter expression and selected filters
-                clearFilterExpression();
-                // Set the filter expression to the new filter expression
-                addFilter(idColumn, id);
-                // This is to ensure that the original data remains intact for further operations
-                dataGridView1.DataSource = dt; // Keep the original DataTable as DataSource
-                dt.DefaultView.RowFilter = filterExpression; // Apply the filter expression to the DataTable's DefaultView
+                dataGridView1.DataSource = result;
+                UpdateFilterUI();
             }
             else
             {
-                // If no rows found, show a message and set the DataGridView to original data
                 MessageBox.Show($"No customer found with ID: {id}");
             }
-            DataTable dt_view = dt;
         }
 
         private void btnRemoveFilter_Click(object sender, EventArgs e)
         {
-            //Remove the selected filter from the sbSelFilter
-            //Note : Filter exists in the sbSelFilter and FilterExpression
-
-            if (sbSelFilter.SelectedItem != null && sbSelFilter.Items.Count == 1) //Reset the filter expression and selected filters if only one filter exists //Case caused by wrong string manipluation from FindByID button
-            {
-                clearFilterExpression();
-                DataTable dt = (DataTable)dataGridView1.DataSource;
-                dt.DefaultView.RowFilter = string.Empty; // Clear the filter on DataGridView
-                dataGridView1.DataSource = dt; // Reset the DataGridView to original data
-                // Reset the sbFilter items
-                sbFilter.Items.Clear();
-                foreach (DataColumn column in dt.Columns)
-                {
-                    sbFilter.Items.Add(column.ColumnName);
-                }
-                txtFilter.Visible = false;
-                btnFilterAdd.Visible = false;
-            }
-            else if (sbSelFilter.SelectedItem != null)
+            if (sbSelFilter.SelectedItem != null)
             {
                 string selectedFilter = sbSelFilter.SelectedItem.ToString();
-                sbSelFilter.Items.Remove(selectedFilter);
-                //Remove the filter expression from the filterExpression
-                string filterColumn = selectedFilter.Split(':')[0].Trim();
-                string filterValue = selectedFilter.Split(':')[1].Trim();
-                if (filterExpression.Contains($"{filterColumn} LIKE '%{filterValue}%'"))
+                var parts = selectedFilter.Split(':');
+                if (parts.Length == 2)
                 {
-                    filterExpression = filterExpression.Replace($" AND {filterColumn} LIKE '%{filterValue}%'", string.Empty);
-                    filterExpression = filterExpression.Replace($"{filterColumn} LIKE '%{filterValue}%'", string.Empty);
+                    controll.RemoveFilter(parts[0].Trim(), parts[1].Trim());
+                    dataGridView1.DataSource = controll.GetFilteredCustomerData();
+                    UpdateFilterUI();
                 }
-                DataTable dt = (DataTable)dataGridView1.DataSource;
-                dt.DefaultView.RowFilter = filterExpression;
             }
             else
             {
                 MessageBox.Show("Please select a filter to remove.");
             }
+        }
+
+        private void UpdateFilterUI()
+        {
+            sbSelFilter.Items.Clear();
+            foreach (var filter in controll.FilterList)
+                sbSelFilter.Items.Add(filter);
+            sbSelFilter.Text = string.Empty;
         }
     }
 }

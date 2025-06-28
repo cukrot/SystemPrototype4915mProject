@@ -129,7 +129,7 @@ namespace DatabaseAccessController
                 {
                     if (i > 0)
                         sb.Append(" AND ");
-                    sb.Append($"`{keysName[i]}` = {row[keysName[i]]}");
+                    sb.Append($"`{keysName[i]}` = '{row[keysName[i]]}'");
                 }
                 sb.Append(";");
             }
