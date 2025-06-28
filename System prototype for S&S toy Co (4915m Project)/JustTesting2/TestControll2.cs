@@ -94,7 +94,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
         {
             if (string.IsNullOrWhiteSpace(id) || customer == null)
                 return null;
-            DataTable dt = FindRowsByID(id, customer, customerFilterExpression);
+            return FindRowsByID(id, customer, customerFilterExpression);
         }
 
         public void RemoveCustomerFilter(string column, string value)
@@ -115,7 +115,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
 
 
 
-        public async Task<int> InsertCustomerData(string tableName, string[] values)
+        /*public async Task<int> InsertCustomerData(string tableName, string[] values)
         {
             //Anyway, this method is used to insert data into the customer table
             //So no need of keyColumns, as it is not used in the insert operation
@@ -128,7 +128,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             }
             int rowsAffected = await InsertTableRow(tableName, mmptyCustomer, values);
             return rowsAffected;
-        }
+        }*/
 
         internal async Task<int> InsertCustomerData(Dictionary<string, string> values) //Ingore the above method, this is the one you should use
         {
@@ -143,7 +143,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             {
                 throw new Exception($"An error occurred while inserting data: {ex.Message}", ex);
             }
-
+            return rowsAffected;
         }
     }
 }
