@@ -14,7 +14,6 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
     public partial class Test_Insert : Form
     {
         TestControll2 controll;
-        DataColumn[] columns;
 
         public Test_Insert()
         {
@@ -29,28 +28,25 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
 
         private void Test_Insert_Load(object sender, EventArgs e)
         {
+        }
+
+        private async void btnSubmit_Click(object sender, EventArgs e)
+        {
+            string name = txtName.Text.Trim();
+            string phoneNum = txtPhoneNum.Text.Trim();
+            string address = txtAddress.Text.Trim();
+            string email = txtEmail.Text.Trim();
+            string[] values = new string[] { name, phoneNum, address, email };
+
+            //pass values to controll.InsertData() method
             try
             {
-                //load columns into the listbox
-                // Assuming controll.GetColumns() returns a list of column names
-                columns = controll.GetColumns();
-                if (columns != null && columns.Length > 0)
-                {
-                    lbColumns.Items.Clear();
-                    foreach (var column in columns)
-                    {
-                        lbColumns.Items.Add(column.ColumnName);
-                    }
-                }
-                else
-                {
-                    MessageBox.Show("No columns found.");
-                }
+                await controll.InsertCustomerData("customer", controll.KeyColumns, values);
+                MessageBox.Show("Data inserted successfully.");
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"An error occurred while loading columns: {ex.Message}");
-                return;
+                MessageBox.Show($"An error occurred while inserting data: {ex.Message}");
             }
         }
     }
