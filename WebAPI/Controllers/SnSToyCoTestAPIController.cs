@@ -116,5 +116,21 @@ namespace WebAPI.Controllers
                 throw ex;
             }
         }
-    }
+        [HttpPost("GetEmptyTable")]
+        public string GetEmptyTable([FromBody] String tableName)
+        {
+            try
+            {
+                dboGetCompanyData dboGetCompanyData = new dboGetCompanyData(_configuration["ConnectionStrings_of_snstoycotest"]);
+                DataTable dtResult = dboGetCompanyData.GetEmptyTable(tableName);
+                // Convert DataTable to JSON string
+                string jsonString = JsonConvert.SerializeObject(dtResult);
+                // Return JSON string
+                return jsonString;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 }

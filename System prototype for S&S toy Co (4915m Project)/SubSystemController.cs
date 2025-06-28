@@ -199,12 +199,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
             return GetFilteredTable(dt);
         }
 
-        public DataTable GetFilteredTable(DataTable dt)
-        {
-            DataView dv = new DataView(dt);
-            dv.RowFilter = filterExpression;
-            return dv.ToTable();
-        }
+
 
         public void RemoveFilterItem(string column, string value, DataTable dt)
         {
@@ -242,6 +237,12 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
                 filterExpression += $"{column} = {value}";
 
             filterList.Add($"{column}: {value}");
+        }
+        public DataTable GetFilteredTable(DataTable dt)
+        {
+            DataView dv = new DataView(dt);
+            dv.RowFilter = filterExpression;
+            return dv.ToTable();
         }
 
         public DataTable GetFilteredTable(DataTable customer, string customerFilterExpression)
@@ -301,6 +302,117 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
                 filterExpression += $"{column} = {value}";
             filterList.Add($"{column}: {value}");
             return filterExpression;
+        }
+
+        public async Task<DataTable> GetEmptyTable(string tableName)
+        {
+            // This method retrieves an empty DataTable with the specified tableName from the API
+            DataTable dt = null;
+            try
+            {
+                APICaller apiCaller = new APICaller();
+                string jsonTableName = JsonConvert.SerializeObject(tableName, Formatting.Indented);
+                StringContent content = new StringContent(jsonTableName, Encoding.UTF8, "application/json");
+                String jsonString = await apiCaller.GetApiResponse((api + "GetEmptyTable"), content);
+                dt = JsonConvert.DeserializeObject<DataTable>(jsonString);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return dt;
+        }
+
+        /*public async Task<int> InsertTableRow(string tableName, DataTable mmptyCustomer, Dictionary<string, string> values) //Useless method, below is the same method with different parameters
+        {
+            // This method inserts a new row into the specified tableName using the provided values
+            // It returns the number of rows affected by the insert operation
+            // Also, calls the API to insert the data
+            // Endpoint: /api/SnSToyCoTestAPI/InsertTableData
+            // Note: The values in key columns are not used in the insert operation, as they are auto-generated or not required for insert
+            // As checking has been done in InsertTableRow method, so no need to check again here
+
+        }*/
+
+        public async Task<int> InsertTableRow(string v, Dictionary<string, string> values, string[] colsName_noKey, string[] keyColumns)
+        {
+            //Check if the values contain all columns(All columns are required for insert operation), also check if the values contain the key columns
+            // Note that vaules in keyColumns should be null or empty, as they are auto-generated or not required for insert operation
+            if (values == null || values.Count == 0 || colsName_noKey == null || colsName_noKey.Length == 0 || keyColumns == null || keyColumns.Length == 0)
+            {
+                throw new ArgumentException("Values or column names cannot be null or empty.");
+            }
+            else if (values.Count < colsName_noKey.Length + keyColumns.Length)
+            {
+                throw new ArgumentException("Not enough values provided for the insert operation.");
+            }
+            else if (values.Keys.Any(k => !colsName_noKey.Contains(k) && !keyColumns.Contains(k)))
+            {
+                throw new ArgumentException("Values contain keys that are not in the specified columns.");
+            }
+            //Check values in all columns
+            foreach (var col in colsName_noKey)
+            {
+                if (!values.ContainsKey(col) || string.IsNullOrWhiteSpace(values[col]))
+                {
+                    throw new ArgumentException($"Value for column '{col}' is required.");
+                }
+            }
+            //Check values in key columns
+            foreach (var keyCol in keyColumns)
+            {
+                if (!values.ContainsKey(keyCol) || !string.IsNullOrWhiteSpace(values[keyCol]))
+                {
+                    throw new ArgumentException($"Value for key column '{keyCol}' should be null or empty.");
+                }
+            }
+
+            // If all checks passed, proceed to insert the row
+
+            // Get the empty Table from API or predefined columns
+            DataTable emptyTable = await GetEmptyTable(v);
+            if (emptyTable == null || emptyTable.Columns.Count == 0)
+            {
+                throw new InvalidOperationException($"No empty table found for the specified table: {v}.");
+            }
+            // Create a new DataRow and populate it with the values
+            DataRow newRow = emptyTable.NewRow();
+            foreach (var col in colsName_noKey)
+            {
+                if (values.ContainsKey(col))
+                {
+                    newRow[col] = values[col];
+                }
+            }
+            // Add the new row to the DataTable
+            emptyTable.Rows.Add(newRow);
+
+            // Insert the DataTable into the database using the API
+            int rowsAffected = await InsertTable(emptyTable, v);
+            return rowsAffected;
+        }
+
+        private async Task<int> InsertTable(DataTable emptyTable, string v)
+        {
+            int rowsAffected = 0;
+            try
+            {
+                APICaller apiCaller = new APICaller();
+                StringContent content = convertDataTableToJasonString(emptyTable);
+                // Send POST request to the Web API
+                rowsAffected = await apiCaller.PostAPIResponse((api + "InsertTableData"), content);
+            }
+            catch (HttpRequestException e)
+            {
+                // Log the exception message
+                throw e;
+            }
+            catch (Exception ex)
+            {
+                // Log any other exceptions
+                throw ex;
+            }
+            return rowsAffected;
         }
     }
 }

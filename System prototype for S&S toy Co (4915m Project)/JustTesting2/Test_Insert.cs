@@ -36,12 +36,22 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
             string phoneNum = txtPhoneNum.Text.Trim();
             string address = txtAddress.Text.Trim();
             string email = txtEmail.Text.Trim();
-            string[] values = new string[] { name, phoneNum, address, email };
+            Dictionary<string, string> values = new Dictionary<string, string>();
+            values.Add("CustomerID", null); // Assuming CustomerID is auto-generated or not required for insert
+            values.Add("name", name);
+            values.Add("phoneNum", phoneNum);
+            values.Add("address", address);
+            values.Add("email", email);
 
             //pass values to controll.InsertData() method
             try
             {
-                await controll.InsertCustomerData("customer", values);
+                int rowsAffected = await controll.InsertCustomerData(values);
+                if (rowsAffected == 0)
+                {
+                    MessageBox.Show("No rows were inserted. Please check your input.");
+                    return;
+                }
                 MessageBox.Show("Data inserted successfully.");
             }
             catch (Exception ex)

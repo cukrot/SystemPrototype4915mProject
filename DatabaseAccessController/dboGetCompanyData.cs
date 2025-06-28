@@ -18,6 +18,14 @@ namespace DatabaseAccessController
             String sqlCmd = "SELECT * FROM customers";
             return GetData(sqlCmd);
         }
+
+        public DataTable GetEmptyTable(string tableName)
+        {
+            // This method retrieves the structure of the specified table without any data.
+            String sqlCmd = $"SELECT * FROM `{tableName}` WHERE 1=0;"; // This will return an empty result set with the table structure
+            return GetData(sqlCmd);
+        }
+
         public DataTable GetTableData(String tableName)
         {
             String sqlCmd = "SELECT * FROM " + tableName;

@@ -54,7 +54,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             {
                 dt = await GetTableData("customer"); //specify table name
                 customer = dt; //store the DataTable for later use
-               
+
                 // Set ReadOnly for key columns
                 if (customerKeyColumns != null && customer != null)
                 {
@@ -94,7 +94,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
         {
             if (string.IsNullOrWhiteSpace(id) || customer == null)
                 return null;
-            return FindRowsByID(id, customer, customerFilterExpression);
+            DataTable dt = FindRowsByID(id, customer, customerFilterExpression);
         }
 
         public void RemoveCustomerFilter(string column, string value)
@@ -107,81 +107,43 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             customerFilterExpression = AddFilterItem(column, value, customer, customerFilterExpression);
         }
 
-        public String[] GetCustomerColumns()
+
+        public String[] GetCustomerColumnsName()
         {
             return customerColsName;
         }
 
 
-        public async void InsertCustomerData(string tableName, string[] values)
+
+        public async Task<int> InsertCustomerData(string tableName, string[] values)
         {
             //Anyway, this method is used to insert data into the customer table
             //So no need of keyColumns, as it is not used in the insert operation
 
-            //Get the DataColumns from API or predefined columns
-            DataColumn[] columns = await GetCustomerColumns_noKey(tableName);
-            if (columns == null || columns.Length == 0) { throw new InvalidOperationException("No columns found for the specified table."); }
-            bool result = await InsertTableRow(tableName, columns, values);
+            //Get the empty Table from API or predefined columns
+            DataTable mmptyCustomer = await GetEmptyTable(tableName);
+            if (mmptyCustomer == null || mmptyCustomer.Columns.Count == 0)
+            {
+                throw new InvalidOperationException($"No empty table found for the specified table: {tableName}.");
+            }
+            int rowsAffected = await InsertTableRow(tableName, mmptyCustomer, values);
+            return rowsAffected;
         }
 
-        public async Task<bool> InsertTableRow(string tableName, DataColumn[] columns, string[] values)
+        internal async Task<int> InsertCustomerData(Dictionary<string, string> values) //Ingore the above method, this is the one you should use
         {
-            // Create a new DataTable with the specified columns
-            //By the way, there is only a row of data from the form to insert
-            DataTable dt = new DataTable(tableName);
-            dt.Columns.AddRange(columns);
-
-            // Create a new DataRow and populate it with the values
-            DataRow newRow = dt.NewRow();
-            for (int i = 0; i < columns.Length && i < values.Length; i++)
-            {
-                newRow[columns[i].ColumnName] = values[i];
-            }
-        }
-
-        private DataColumn[] GetCustomerColumns_noKey(string v)
-        {
-            //This method should call GetTableColumns_noKey from SubSystemController.cs
-            //or you can define the columns manually as below
-
-            //For demonstration, we will create DataColumn array manually with customerColsName
-            /*List<DataColumn> columns = new List<DataColumn>();
-            foreach (var colName in customerColsName_noKey)
-            {
-                DataColumn column = new DataColumn(colName);
-                if (keyColumns.Contains(colName))
-                {
-                    column.ReadOnly = true; // Set ReadOnly for key columns
-                }
-                columns.Add(column);
-            }
-            return columns.ToArray();*/
-
-            //Or you can use GetTableColumns() method from SubSystemController.cs
-            DataColumn[] columns = GetTableColumns(v);
-            if (columns == null || columns.Length == 0)
-            {
-                throw new InvalidOperationException("No columns found for the specified table.");
-            }
-            return columns;
-        }
-
-        private async DataColumn[] GetTableColumns(string v) //It will move to SubSystemController.cs
-        {
-            //Call the API to get the DataColumns for the specified table
+            // This method is used to insert data into the customer table using a dictionary of values
+            int rowsAffected = 0;
+            // Call InsertTableRow() which is a generic method in SubSystemController.cs
             try
             {
-                DataTable dt = await GetData($"GetTableColumns_noKey", v); //specify endpoint & table name
-                if (dt == null || dt.Columns.Count == 0)
-                {
-                    throw new InvalidOperationException($"No columns found for the table: {v}");
-                }
-                return dt.Columns;
+                rowsAffected = await InsertTableRow("customer", values, customerColsName_noKey, customerKeyColumns);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error getting columns for table {v}: {ex.Message}", ex);
+                throw new Exception($"An error occurred while inserting data: {ex.Message}", ex);
             }
+
         }
     }
 }
