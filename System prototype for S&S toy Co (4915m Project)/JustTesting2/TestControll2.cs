@@ -14,7 +14,25 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
 {
     public class TestControll2 : SubSystemController
     {
-        public TestControll2() { setApi("/api/TestAPI/"); }
+        DataTable customer;
+        DataColumn[] customerCols;
+
+        // Add keyColumns field and property
+        private string[] keyColumns = Array.Empty<string>();
+        public string[] KeyColumns
+        {
+            get => keyColumns;
+            set => keyColumns = value ?? Array.Empty<string>();
+        }
+
+        // Add constructor overload to accept keyColumns
+        public TestControll2() { setApi("/api/SnSToyCoTestAPI/"); }
+        public TestControll2(string[] keyColumns)
+        {
+            setApi("/api/SnSToyCoTestAPI/");
+            this.keyColumns = keyColumns ?? Array.Empty<string>();
+        }
+
         //recommend to see useable api in SubSystemController.cs
 
         //Useful tips       Useful tips     Useful tips
@@ -30,9 +48,20 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             DataTable dt = null;
             try
             {
-                dt = await GetTableData("customers"); //specify table name
+                dt = await GetTableData("customer"); //specify table name
+                customer = dt; //store the DataTable for later use
+               
+                // Set ReadOnly for key columns
+                if (keyColumns != null && customer != null)
+                {
+                    foreach (var colName in keyColumns)
+                    {
+                        if (customer.Columns.Contains(colName))
+                            customer.Columns[colName].ReadOnly = true;
+                    }
+                }
                 //Or you can use GetData()
-                //dt = await GetData("GetTableData", "customers"); //specify endpoint & table name
+                //dt = await GetData("GetTableData", "customer"); //specify endpoint & table name
             }
             catch (Exception ex)
             {
@@ -40,12 +69,42 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             }
             return dt;
         }
+
         public async Task<int> UpdateCustomerDataToAPI(DataTable dtUpdated)
-            //This method just specify table name ane keysName, then use the common method UpdateData() to update
         {
-            String[] keysName = {"customerNumber" }; //specify keys
-            int rowsUpdated = await UpdateData(dtUpdated, "customers", keysName); //table name ane keysName
+            // Use keyColumns field instead of local variable
+            int rowsUpdated = await UpdateData(dtUpdated, "customer", keyColumns);
             return rowsUpdated;
+        }
+
+        public DataColumn[] GetColumns() //Assuming the method returns a list of column names from "customer" table
+        {
+            if (customer != null && customer.Columns.Count > 0)
+            {
+                customerCols = customer.Columns.Cast<DataColumn>().ToArray();
+                return customerCols;
+            }
+            else
+            {
+                throw new Exception("No columns found in the customer DataTable.");
+            }
+        }
+
+        public DataTable GetFilteredCustomerData()
+        {
+            if (customer == null) return null;
+            return GetFilteredTable(customer);
+        }
+
+        public DataTable FindCustomerByID(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id) || customer == null)
+                return null;
+            return FindRowsByID(id, customer);
+        }
+        public void RemoveFilter(string column, string value)
+        {
+            RemoveFilterItem(column, value, customer);
         }
     }
 }

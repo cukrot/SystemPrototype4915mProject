@@ -15,6 +15,12 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
         private String testApi = "/api/TestAPI/";
         private String companyApi = "/api/SnSToyCoTestAPI/";
         private String api;
+        public string filterExpression = string.Empty;
+        public List<string> filterList = new();
+
+        public string FilterExpression => filterExpression;
+
+        public IReadOnlyList<string> FilterList => filterList.AsReadOnly();
         
         public SubSystemController() { api = companyApi;}
         public SubSystemController(String apiString) { this.api = apiString; }
@@ -168,6 +174,72 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
 
             StringContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
             return content;
+        }
+
+        public void ClearFilter()
+        {
+            filterExpression = string.Empty;
+            filterList.Clear();
+        }
+
+        public void AddFilter(string column, string value)
+        {
+            if (!string.IsNullOrEmpty(filterExpression))
+                filterExpression += " AND ";
+
+            var col = customer?.Columns[column];
+            if (col != null && col.DataType == typeof(string))
+            {
+                filterExpression += $"{column} LIKE '%{value.Replace("'", "''")}%'";
+            }
+            else
+                filterExpression += $"{column} = {value}";
+
+            filterList.Add($"{column}: {value}");
+        }
+
+
+
+        public DataTable FindRowsByID(string id, DataTable dt)
+        {
+            string idColumn = dt.Columns[0].ColumnName;
+            ClearFilter();
+
+            filterExpression = $"{idColumn} LIKE '%{id.Replace("'", "''")}%'";
+
+            filterList.Clear();
+            filterList.Add($"{idColumn}: {id}");
+
+            return GetFilteredTable(dt);
+        }
+
+        public DataTable GetFilteredTable(DataTable dt)
+        {
+            DataView dv = new DataView(dt);
+            dv.RowFilter = filterExpression;
+            return dv.ToTable();
+        }
+
+        public void RemoveFilterItem(string column, string value, DataTable dt)
+        {
+            string filterItem = $"{column}: {value}";
+            if (filterList.Contains(filterItem))
+            {
+                filterList.Remove(filterItem);
+                // 重新組合 filterExpression
+                filterExpression = string.Join(" AND ",
+                    filterList.Select(f =>
+                    {
+                        var parts = f.Split(':');
+                        var colName = parts[0].Trim();
+                        var val = parts[1].Trim();
+                        var col = dt?.Columns[colName];
+                        if (col != null && col.DataType == typeof(string))
+                            return $"{colName} = '{val.Replace("'", "''")}'";
+                        else
+                            return $"{colName} = {val}";
+                    }));
+            }
         }
     }
 }
