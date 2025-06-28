@@ -41,7 +41,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
             //pass values to controll.InsertData() method
             try
             {
-                await controll.InsertCustomerData("customer", controll.KeyColumns, values);
+                await controll.InsertCustomerData("customer", values);
                 MessageBox.Show("Data inserted successfully.");
             }
             catch (Exception ex)

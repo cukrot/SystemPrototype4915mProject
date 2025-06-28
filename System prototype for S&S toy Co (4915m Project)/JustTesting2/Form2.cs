@@ -126,7 +126,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
             {
                 string filterColumn = sbFilter.SelectedItem.ToString();
                 string filterValue = txtFilter.Text;
-                controll.AddFilter(filterColumn, filterValue);
+                controll.AddCustomerFilter(filterColumn, filterValue);
                 dataGridView1.DataSource = controll.GetFilteredCustomerData();
                 UpdateFilterUI();
             }
@@ -181,7 +181,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
                 var parts = selectedFilter.Split(':');
                 if (parts.Length == 2)
                 {
-                    controll.RemoveFilter(parts[0].Trim(), parts[1].Trim());
+                    controll.RemoveCustomerFilter(parts[0].Trim(), parts[1].Trim());
                     dataGridView1.DataSource = controll.GetFilteredCustomerData();
                     UpdateFilterUI();
                 }
