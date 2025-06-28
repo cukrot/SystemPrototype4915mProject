@@ -106,5 +106,9 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
         {
             RemoveFilterItem(column, value, customer);
         }
+        public void AddFilter(string column, string value)
+        {
+            AddFilterItem(column, value, customer);
+        }
     }
 }
