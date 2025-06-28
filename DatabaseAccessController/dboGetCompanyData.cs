@@ -9,6 +9,27 @@ namespace DatabaseAccessController
 {
     public class dboGetCompanyData : dboDatabaseController
     {
+        Dictionary<string, string[]> primaryKeys = new Dictionary<string, string[]>
+        {
+            { "customer", new[] { "CustomerID" } },
+            { "delivery", new[] { "DeliveryID" } },
+            { "employee", new[] { "EmployeeID" } },
+            { "file", new[] { "FileID" } },
+            { "ingredient", new[] { "MaterialID" } },
+            { "material", new[] { "MaterialID" } },
+            { "meeting", new[] { "MeetingID" } },
+            { "meetingparticipant", new[] { "MeetingID", "EmpID" } },
+            { "order", new[] { "OrderID" } },
+            { "orderline", new[] { "OrderID", "ProductID" } },
+            { "payment", new[] { "PaymentID" } },
+            { "product", new[] { "ProductID" } },
+            { "productinventory", new[] { "ProductID", "WarehouseID" } },
+            { "productorder", new[] { "POrderID" } },
+            { "purchase", new[] { "PurchaseID" } },
+            { "purchaseline", new[] { "PurchaseID", "SupplierID", "MaterialID" } },
+            { "supplier", new[] { "SupplierID" } },
+            { "warehouse", new[] { "WarehouseID" } }
+        };
         public dboGetCompanyData(string connectionString) : base(connectionString)
         {
         }
@@ -23,7 +44,12 @@ namespace DatabaseAccessController
         {
             // This method retrieves the structure of the specified table without any data.
             String sqlCmd = $"SELECT * FROM `{tableName}` WHERE 1=0;"; // This will return an empty result set with the table structure
-            return GetData(sqlCmd);
+            DataTable dt = GetData(sqlCmd);
+            // Stuff a meaningful row into the DataTable to ensure it has columns
+            DataRow dr = dt.NewRow();
+            dr[0] = "Null";
+            dt.Rows.Add(dr);
+            return dt;
         }
 
         public DataTable GetTableData(String tableName)
@@ -32,8 +58,32 @@ namespace DatabaseAccessController
             return GetData(sqlCmd);
         }
 
-        public int InsertTable(DataTable dtInserted, string tableName)
+        public int InsertTable(DataTable dtInserted, string tableName) // Inserts multiple rows into the specified table
+                                                                       //I forget to check if values in key columns are null or not, now I am modifying the code to handle that
         {
+            if (dtInserted == null || dtInserted.Rows.Count == 0)
+            {
+                throw new ArgumentException("The DataTable to insert cannot be null or empty.", nameof(dtInserted));
+            }
+            // I have to use switch statement to handle different table names, as each table may have different key columns
+            // Get the primary keys for the specified table by calling a new method
+            string[] keysName = primaryKeys.ContainsKey(tableName) ? primaryKeys[tableName] : null;
+            // Then check if values in key columns are null or not
+            if (keysName != null)
+            {
+                foreach (DataRow row in dtInserted.Rows)
+                {
+                    foreach (string key in keysName)
+                    {
+                        if (row[key] == DBNull.Value || string.IsNullOrEmpty(row[key].ToString()))
+                        {
+                            throw new ArgumentException($"Key column '{key}' cannot be null or empty for table '{tableName}'.", nameof(dtInserted));
+                        }
+                    }
+                }
+            }
+            // Before inserting, asign a new value to the key columns
+
             StringBuilder sb = new StringBuilder();
             sb.Append($"INSERT INTO `{tableName}` (");
             // Append column names
@@ -57,6 +107,8 @@ namespace DatabaseAccessController
             sb.Length -= 2; // Remove the last comma and space
             return BatchUpdate(sb.ToString());
         }
+
+
 
         public DataTable SearchData(string filterString)
         {

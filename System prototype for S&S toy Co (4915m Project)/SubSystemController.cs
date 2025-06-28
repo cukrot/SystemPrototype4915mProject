@@ -346,22 +346,24 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
             {
                 throw new ArgumentException("Not enough values provided for the insert operation.");
             }
-            else if (values.Keys.Any(k => !colsName_noKey.Contains(k) && !keyColumns.Contains(k)))
+            else if (values.Count > colsName_noKey.Length + keyColumns.Length)
             {
-                throw new ArgumentException("Values contain keys that are not in the specified columns.");
+                throw new ArgumentException("Too many values provided for the insert operation.");
             }
-            //Check values in all columns
-            foreach (var col in colsName_noKey)
-            {
-                if (!values.ContainsKey(col) || string.IsNullOrWhiteSpace(values[col]))
+                //Check values in all columns
+                foreach (var col in colsName_noKey)
                 {
-                    throw new ArgumentException($"Value for column '{col}' is required.");
+                    if (!values.Keys.Any(k => string.Equals(k, col, StringComparison.OrdinalIgnoreCase)) 
+                        || string.IsNullOrWhiteSpace(values.FirstOrDefault(kv => string.Equals(kv.Key, col, StringComparison.OrdinalIgnoreCase)).Value))
+                    {
+                        throw new ArgumentException($"Value for column '{col}' is required.");
+                    }
                 }
-            }
             //Check values in key columns
             foreach (var keyCol in keyColumns)
             {
-                if (!values.ContainsKey(keyCol) || !string.IsNullOrWhiteSpace(values[keyCol]))
+                if (!values.Keys.Any(k => string.Equals(k, keyCol, StringComparison.OrdinalIgnoreCase)) 
+                    || !string.IsNullOrWhiteSpace(values.FirstOrDefault(kv => string.Equals(kv.Key, keyCol, StringComparison.OrdinalIgnoreCase)).Value))
                 {
                     throw new ArgumentException($"Value for key column '{keyCol}' should be null or empty.");
                 }
@@ -371,34 +373,40 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
 
             // Get the empty Table from API or predefined columns
             DataTable emptyTable = await GetEmptyTable(v);
-            if (emptyTable == null || emptyTable.Columns.Count == 0)
+            if (emptyTable.Columns.Count == 0)
             {
                 throw new InvalidOperationException($"No empty table found for the specified table: {v}.");
             }
+            //Clear any existing rows in the DataTable
+            emptyTable.Clear();
             // Create a new DataRow and populate it with the values
             DataRow newRow = emptyTable.NewRow();
             foreach (var col in colsName_noKey)
             {
-                if (values.ContainsKey(col))
+                if (values.Keys.Any(k => string.Equals(k, col, StringComparison.OrdinalIgnoreCase)))
                 {
                     newRow[col] = values[col];
                 }
             }
             // Add the new row to the DataTable
             emptyTable.Rows.Add(newRow);
-
+            // Accept changes to the DataTable
+            emptyTable.AcceptChanges(); // This is optional, as we are inserting a new row
+            newRow.SetAdded();
             // Insert the DataTable into the database using the API
-            int rowsAffected = await InsertTable(emptyTable, v);
+            int rowsAffected = await InsertTable(emptyTable, v, keyColumns);
             return rowsAffected;
         }
 
-        private async Task<int> InsertTable(DataTable emptyTable, string v)
+        private async Task<int> InsertTable(DataTable newTable, string v, string[] keys)
         {
             int rowsAffected = 0;
             try
             {
                 APICaller apiCaller = new APICaller();
-                StringContent content = convertDataTableToJasonString(emptyTable);
+                //StringContent content = convertDataTableToJasonString(emptyTable);
+                // Serialize DataTable to JSON by below method
+                StringContent content = convertDataTableToJasonString(newTable, v, keys);
                 // Send POST request to the Web API
                 rowsAffected = await apiCaller.PostAPIResponse((api + "InsertTableData"), content);
             }
@@ -414,5 +422,17 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
             }
             return rowsAffected;
         }
+
+        /*private StringContent convertNewDataTableToJasonString(DataTable newTable, string tableName, string[] keys)
+        {
+            // Serialize DataTable to JSON
+            DataTable dtAdded = newTable.GetChanges(DataRowState.Added);
+            string jsonAdded = JsonConvert.SerializeObject(dtAdded, Formatting.Indented);
+            JsonDataTable jsonDT = new JsonDataTable();
+            jsonDT.dtAdded = jsonAdded;
+            string jsonString = JsonConvert.SerializeObject(jsonDT);
+            StringContent content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            return content;
+        }*/
     }
 }

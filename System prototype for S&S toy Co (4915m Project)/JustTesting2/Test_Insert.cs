@@ -38,10 +38,10 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
             string email = txtEmail.Text.Trim();
             Dictionary<string, string> values = new Dictionary<string, string>();
             values.Add("CustomerID", null); // Assuming CustomerID is auto-generated or not required for insert
-            values.Add("name", name);
-            values.Add("phoneNum", phoneNum);
-            values.Add("address", address);
-            values.Add("email", email);
+            values.Add("Name", name);
+            values.Add("PhoneNum", phoneNum);
+            values.Add("Address", address);
+            values.Add("Email", email);
 
             //pass values to controll.InsertData() method
             try
