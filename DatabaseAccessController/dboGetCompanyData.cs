@@ -54,7 +54,7 @@ namespace DatabaseAccessController
 
         public DataTable GetTableData(String tableName)
         {
-            String sqlCmd = "SELECT * FROM " + tableName;
+            String sqlCmd = "SELECT * FROM " + tableName +";";
             return GetData(sqlCmd);
         }
 
@@ -68,10 +68,10 @@ namespace DatabaseAccessController
             //We need to check the table if it has single or multiple keys
             // If the table has a single key, call InsertDataWithNoKeys
             if (primaryKeys.ContainsKey(tableName) && primaryKeys[tableName].Length == 1)
-                // If the table has a single key, we can insert data with keys
-                return InsertDataNullKeys(dtInserted, tableName);
-            else  // If the table has multiple keys, we need to handle it differently
-                return InsertDataWithKey(dtInserted, tableName);
+                // If the table has a single key, check if the key column values are null or empty, then generate new key values
+                dtInserted = getNewKeyValuesForSingleKey(dtInserted, tableName);
+
+            return InsertDataWithKey(dtInserted, tableName);
         }
 
         private int InsertDataWithKey(DataTable dtInserted, string tableName)
@@ -94,7 +94,7 @@ namespace DatabaseAccessController
             return BatchUpdate(sb.ToString());
         }
 
-        private int InsertDataNullKeys(DataTable dtInserted, string tableName)
+        private DataTable getNewKeyValuesForSingleKey(DataTable dtInserted, string tableName)
         {
             //first check if values in key column in the inserted table is null or empty string, else throw exception
             //primaryKeys[tableName] is the name of the key columns for the table
@@ -111,28 +111,28 @@ namespace DatabaseAccessController
                 }
             }
 
-            // Build the SQL command to insert data into the specified table like above method, but without key columns
-            // 取得主鍵欄位名稱
-            string[] keyColumns = primaryKeys.ContainsKey(tableName) ? primaryKeys[tableName] : Array.Empty<string>();
-
-
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append($"INSERT INTO `{tableName}` (");
-            sb.Append(string.Join(", ", nonKeyColumns.Select(col => $"`{col.ColumnName}`")));
-            sb.Append(") VALUES ");
-
-            var valueRows = new List<string>();
+            //Generate key values for the key columns
+            //As key value is a string like "CUST001" or "ORD0001, we need to get the last value from the database by calling GetData method
+            string keyName = primaryKeys[tableName][0];
+            DataTable dtLastKey = GetData($"SELECT MAX(`{keyName}`) FROM `{tableName}`;");
+            string lastKey = dtLastKey.Rows[0][keyName].ToString();
+            if (string.IsNullOrEmpty(lastKey))
+            {
+                lastKey = "000"; // Start from 000 if no previous key exists
+            }
+            else
+            {
+                // Extract the numeric part and increment it
+                int numericPart = int.Parse(lastKey.Substring(3)) + 1; // Assuming the key format is like "CUST001"
+                lastKey = lastKey.Substring(0, 3) + numericPart.ToString("D3"); // Format as "CUST002"
+            }
+            // Assign the new key value to the key column in the inserted DataTable
             foreach (DataRow row in dtInserted.Rows)
             {
-                var values = nonKeyColumns
-                    .Select(col => $"'{row[col].ToString().Replace("'", "''")}'");
-                valueRows.Add("(" + string.Join(", ", values) + ")");
+                row[keyName] = lastKey; // Assign the new key value
+                lastKey = lastKey.Substring(0, 3) + (int.Parse(lastKey.Substring(3)) + 1).ToString("D3"); // Increment for the next row
             }
-            sb.Append(string.Join(", ", valueRows));
-            sb.Append(";");
-
-            return BatchUpdate(sb.ToString());
+            return dtInserted; // Return the modified DataTable with new key values
         }
 
 
