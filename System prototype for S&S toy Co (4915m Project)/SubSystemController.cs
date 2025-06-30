@@ -21,8 +21,8 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
         public string FilterExpression => filterExpression;
 
         public IReadOnlyList<string> FilterList => filterList.AsReadOnly();
-        
-        public SubSystemController() { api = companyApi;}
+
+        public SubSystemController() { api = companyApi; }
         public SubSystemController(String apiString) { this.api = apiString; }
         public void setApi(String apiString) { this.api = apiString; }
         public async Task<DataTable> GetTableData(String tableName)
@@ -199,12 +199,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
             return GetFilteredTable(dt);
         }
 
-        public DataTable GetFilteredTable(DataTable dt)
-        {
-            DataView dv = new DataView(dt);
-            dv.RowFilter = filterExpression;
-            return dv.ToTable();
-        }
+
 
         public void RemoveFilterItem(string column, string value, DataTable dt)
         {
@@ -242,6 +237,225 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
                 filterExpression += $"{column} = {value}";
 
             filterList.Add($"{column}: {value}");
+        }
+        public DataTable GetFilteredTable(DataTable dt)
+        {
+            DataView dv = new DataView(dt);
+            dv.RowFilter = filterExpression;
+            return dv.ToTable();
+        }
+
+        public DataTable GetFilteredTable(DataTable customer, string customerFilterExpression)
+        {
+            if (string.IsNullOrEmpty(customerFilterExpression) || customer == null)
+                return customer;
+            DataView dv = new DataView(customer);
+            dv.RowFilter = customerFilterExpression;
+            return dv.ToTable();
+        }
+
+        public DataTable FindRowsByID(string id, DataTable customer, string ilterExpression)
+        {
+            if (string.IsNullOrWhiteSpace(id) || customer == null)
+                return null;
+            string idColumn = customer.Columns[0].ColumnName;
+            ClearFilter();
+            filterExpression = $"{idColumn} LIKE '%{id.Replace("'", "''")}%'";
+            filterList.Clear();
+            filterList.Add($"{idColumn}: {id}");
+            return GetFilteredTable(customer, filterExpression);
+        }
+
+        public string RemoveFilterItem(string column, string value, DataTable customer, string filterExpression)
+        {
+            string filterItem = $"{column}: {value}";
+            if (filterList.Contains(filterItem))
+            {
+                filterList.Remove(filterItem);
+                // 重新組合 filterExpression
+                filterExpression = string.Join(" AND ",
+                    filterList.Select(f =>
+                    {
+                        var parts = f.Split(':');
+                        var colName = parts[0].Trim();
+                        var val = parts[1].Trim();
+                        var col = customer?.Columns[colName];
+                        if (col != null && col.DataType == typeof(string))
+                            return $"{colName} = '{val.Replace("'", "''")}'";
+                        else
+                            return $"{colName} = {val}";
+                    }));
+            }
+            return filterExpression;
+        }
+
+        public string AddFilterItem(string column, string value, DataTable customer, string filterExpression)
+        {
+            if (!string.IsNullOrEmpty(filterExpression))
+                filterExpression += " AND ";
+            var col = customer?.Columns[column];
+            if (col != null && col.DataType == typeof(string))
+            {
+                filterExpression += $"{column} LIKE '%{value.Replace("'", "''")}%'";
+            }
+            else
+                filterExpression += $"{column} = {value}";
+            filterList.Add($"{column}: {value}");
+            return filterExpression;
+        }
+
+        public async Task<DataTable> GetEmptyTable(string tableName)
+        {
+            // This method retrieves an empty DataTable with the specified tableName from the API
+            DataTable dt = null;
+            try
+            {
+                APICaller apiCaller = new APICaller();
+                string jsonTableName = JsonConvert.SerializeObject(tableName, Formatting.Indented);
+                StringContent content = new StringContent(jsonTableName, Encoding.UTF8, "application/json");
+                String jsonString = await apiCaller.GetApiResponse((api + "GetEmptyTable"), content);
+                dt = JsonConvert.DeserializeObject<DataTable>(jsonString);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return dt;
+        }
+
+        public async Task<int> InsertTableRow(string v, Dictionary<string, string> values, string[] colsName_noKey, string[] keyColumns)
+        {
+            //Check if the values contain all columns(All columns are required for insert operation), also check if the values contain the key columns
+            // Note that vaules in keyColumns should be null or empty, as they are auto-generated or not required for insert operation
+            if (values == null || values.Count == 0 || colsName_noKey == null || colsName_noKey.Length == 0 || keyColumns == null || keyColumns.Length == 0)
+            {
+                throw new ArgumentException("Values or column names cannot be null or empty.");
+            }
+            else if (values.Count < colsName_noKey.Length + keyColumns.Length)
+            {
+                throw new ArgumentException("Not enough values provided for the insert operation.");
+            }
+            else if (values.Count > colsName_noKey.Length + keyColumns.Length)
+            {
+                throw new ArgumentException("Too many values provided for the insert operation.");
+            }
+            //Check values in all columns
+            foreach (var col in colsName_noKey)
+            {
+                if (!values.Keys.Any(k => string.Equals(k, col, StringComparison.OrdinalIgnoreCase))
+                    || string.IsNullOrWhiteSpace(values.FirstOrDefault(kv => string.Equals(kv.Key, col, StringComparison.OrdinalIgnoreCase)).Value))
+                {
+                    throw new ArgumentException($"Value for column '{col}' is required.");
+                }
+            }
+            //Check values in key columns
+            foreach (var keyCol in keyColumns)
+            {
+                if (!values.Keys.Any(k => string.Equals(k, keyCol, StringComparison.OrdinalIgnoreCase))
+                    || !string.IsNullOrWhiteSpace(values.FirstOrDefault(kv => string.Equals(kv.Key, keyCol, StringComparison.OrdinalIgnoreCase)).Value))
+                {
+                    throw new ArgumentException($"Value for key column '{keyCol}' should be null or empty.");
+                }
+            }
+
+            // If all checks passed, proceed to insert the row
+            int rowsAffected = 0;
+            try { rowsAffected = await InsertTable(v, colsName_noKey, values, keyColumns); }
+            catch (HttpRequestException e)
+            {
+                throw e;
+            }
+            return rowsAffected;
+        }
+
+        private async Task<int> InsertTable(string v, string[] colsName_noKey, Dictionary<string, string> values, string[] keys)
+        {
+            // Get the empty Table from API or predefined columns
+            DataTable newTable = await GetEmptyTable(v);
+            if (newTable.Columns.Count == 0)
+            {
+                throw new InvalidOperationException($"No empty table found for the specified table: {v}.");
+            }
+            //Clear any existing rows in the DataTable
+            newTable.Clear();
+            // Create a new DataRow and populate it with the values
+            DataRow newRow = newTable.NewRow();
+            foreach (var col in colsName_noKey)
+            {
+                if (values.Keys.Any(k => string.Equals(k, col, StringComparison.OrdinalIgnoreCase)))
+                {
+                    newRow[col] = values[col];
+                }
+            }
+            // Add the new row to the DataTable
+            newTable.Rows.Add(newRow);
+            // Accept changes to the DataTable
+            newTable.AcceptChanges(); // This is optional, as we are inserting a new row
+            newRow.SetAdded();
+            // Insert the DataTable into the database using the API
+            int rowsAffected  = 0;
+            try
+            {
+                APICaller apiCaller = new APICaller();
+                //StringContent content = convertDataTableToJasonString(emptyTable);
+                // Serialize DataTable to JSON by below method
+                StringContent content = convertDataTableToJasonString(newTable, v, keys);
+                // Send POST request to the Web API
+                rowsAffected = await apiCaller.PostAPIResponse((api + "InsertTableData"), content);
+            }
+            catch (HttpRequestException e)
+            {
+                // Log the exception message
+                throw e;
+            }
+            catch (Exception ex)
+            {
+                // Log any other exceptions
+                throw ex;
+            }
+            return rowsAffected;
+        }
+
+        // So, there are a few tables need composite key columns, so we need to pass the key columns as well
+        public async Task<int> InsertTableRowWithKeys(string tableName, Dictionary<string, string> values, string[] colsName_noKey, string[] keyColumns)
+        {
+            // This method inserts a new row into the specified tableName using the provided values
+            // It returns the number of rows affected by the insert operation
+            // Also, calls the API to insert the data
+            // Endpoint: /api/SnSToyCoTestAPI/InsertTableData
+            // Note: The values in key columns are not used in the insert operation, as they are auto-generated or not required for insert operation
+
+            // There are a few checks to be done before inserting the data
+            if (values == null || values.Count == 0 || colsName_noKey == null || colsName_noKey.Length == 0 || keyColumns == null || keyColumns.Length == 0)
+            {
+                throw new ArgumentException("Values or column names cannot be null or empty.");
+            }
+            else if (values.Count < colsName_noKey.Length + keyColumns.Length)
+            {
+                throw new ArgumentException("Not enough values provided for the insert operation.");
+            }
+            else if (values.Count > colsName_noKey.Length + keyColumns.Length)
+            {
+                throw new ArgumentException("Too many values provided for the insert operation.");
+            }
+            //Check values in all columns
+            foreach (var col in colsName_noKey)
+            {
+                if (!values.Keys.Any(k => string.Equals(k, col, StringComparison.OrdinalIgnoreCase))
+                    || string.IsNullOrWhiteSpace(values.FirstOrDefault(kv => string.Equals(kv.Key, col, StringComparison.OrdinalIgnoreCase)).Value))
+                {
+                    throw new ArgumentException($"Value for column '{col}' is required.");
+                }
+            }
+            //No need to validate values in key columns, though they should exist or not in the database, also they should be null or empty, as they are auto-generated or not required for insert operation
+            //So, we will not check the values in key columns, as they are not required for insert operation
+            int rowsAffected = 0;
+            try { rowsAffected = await InsertTable(tableName, colsName_noKey, values, keyColumns); }
+            catch (HttpRequestException e)
+            {
+                throw e;
+            }
+            return rowsAffected;
         }
     }
 }

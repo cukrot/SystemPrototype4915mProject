@@ -9,28 +9,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
 {
     public class TestControll2 : SubSystemController
     {
         DataTable customer;
-        DataColumn[] customerCols;
-
-        // Add keyColumns field and property
-        private string[] keyColumns = Array.Empty<string>();
-        public string[] KeyColumns
+        private String[] customerColsName = new string[]
         {
-            get => keyColumns;
-            set => keyColumns = value ?? Array.Empty<string>();
-        }
+            "CustomerID", "Name", "PhoneNum", "Address", "Email"
+        };
+        private String[] customerColsName_noKey = new string[]
+        {
+            "Name", "PhoneNum", "Address", "Email"
+        };
+        private string[] customerKeyColumns = new string[]
+        {
+            "CustomerID"
+        };
+        private string customerFilterExpression = string.Empty;
 
         // Add constructor overload to accept keyColumns
-        public TestControll2() { setApi("/api/SnSToyCoTestAPI/"); }
-        public TestControll2(string[] keyColumns)
+        public TestControll2()
         {
             setApi("/api/SnSToyCoTestAPI/");
-            this.keyColumns = keyColumns ?? Array.Empty<string>();
         }
 
         //recommend to see useable api in SubSystemController.cs
@@ -50,11 +54,11 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             {
                 dt = await GetTableData("customer"); //specify table name
                 customer = dt; //store the DataTable for later use
-               
+
                 // Set ReadOnly for key columns
-                if (keyColumns != null && customer != null)
+                if (customerKeyColumns != null && customer != null)
                 {
-                    foreach (var colName in keyColumns)
+                    foreach (var colName in customerKeyColumns)
                     {
                         if (customer.Columns.Contains(colName))
                             customer.Columns[colName].ReadOnly = true;
@@ -73,42 +77,52 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
         public async Task<int> UpdateCustomerDataToAPI(DataTable dtUpdated)
         {
             // Use keyColumns field instead of local variable
-            int rowsUpdated = await UpdateData(dtUpdated, "customer", keyColumns);
+            int rowsUpdated = await UpdateData(dtUpdated, "customer", customerKeyColumns);
             return rowsUpdated;
         }
 
-        public DataColumn[] GetColumns() //Assuming the method returns a list of column names from "customer" table
-        {
-            if (customer != null && customer.Columns.Count > 0)
-            {
-                customerCols = customer.Columns.Cast<DataColumn>().ToArray();
-                return customerCols;
-            }
-            else
-            {
-                throw new Exception("No columns found in the customer DataTable.");
-            }
-        }
-
+        //
+        // Methods for filtering customer data
+        //
         public DataTable GetFilteredCustomerData()
         {
             if (customer == null) return null;
-            return GetFilteredTable(customer);
+            return GetFilteredTable(customer, customerFilterExpression);
         }
 
         public DataTable FindCustomerByID(string id)
         {
             if (string.IsNullOrWhiteSpace(id) || customer == null)
                 return null;
-            return FindRowsByID(id, customer);
+            return FindRowsByID(id, customer, customerFilterExpression);
         }
-        public void RemoveFilter(string column, string value)
+
+        public void RemoveCustomerFilter(string column, string value)
         {
-            RemoveFilterItem(column, value, customer);
+            customerFilterExpression = RemoveFilterItem(column, value, customer, customerFilterExpression);
         }
-        public void AddFilter(string column, string value)
+
+        public void AddCustomerFilter(string column, string value)
         {
-            AddFilterItem(column, value, customer);
+            customerFilterExpression = AddFilterItem(column, value, customer, customerFilterExpression);
+        }
+
+
+
+        internal async Task<int> InsertCustomerData(Dictionary<string, string> values) //Ingore the above method, this is the one you should use
+        {
+            // This method is used to insert data into the customer table using a dictionary of values
+            int rowsAffected = 0;
+            // Call InsertTableRow() which is a generic method in SubSystemController.cs
+            try
+            {
+                rowsAffected = await InsertTableRow("customer", values, customerColsName_noKey, customerKeyColumns);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred while inserting data: {ex.Message}", ex);
+            }
+            return rowsAffected;
         }
     }
 }
