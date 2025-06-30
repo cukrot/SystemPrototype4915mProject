@@ -51,7 +51,7 @@ namespace DatabaseAccessController
                     // Return the employee information in a dictionary for root user
                     return new Dictionary<string, string>
                     {
-                        { "EmployeeID", "root" }, // Assuming root user has a special identifier
+                        { "EmployeeID", "" }, // Assuming root user does not have a specific EmployeeID
                         { "Department", "root" }, // Assuming root user has a special identifier
                         { "Position", "root" }, // Assuming root user has a special identifier
                         { "Status", "Active" }, // Assuming the root user is always active
