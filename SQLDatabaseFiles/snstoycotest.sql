@@ -30,12 +30,11 @@ USE `snstoycotest`;
 --
 
 CREATE TABLE `customer` (
-  `CustomerID` INT NOT NULL AUTO_INCREMENT,
+  `CustomerID` varchar(10) NOT NULL,
   `Name` varchar(50) DEFAULT NULL,
   `PhoneNum` int(11) DEFAULT NULL,
   `Address` varchar(200) DEFAULT NULL,
-  `Email` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`CustomerID`)
+  `Email` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -56,12 +55,11 @@ INSERT INTO `customer` (`CustomerID`, `Name`, `PhoneNum`, `Address`, `Email`) VA
 --
 
 CREATE TABLE `delivery` (
-  `DeliveryID` INT NOT NULL AUTO_INCREMENT,
+  `DeliveryID` varchar(10) NOT NULL,
   `Method` varchar(30) DEFAULT NULL,
   `Date` date DEFAULT NULL,
-  `OrderID` INT DEFAULT NULL,
-  `EmployeeID` INT DEFAULT NULL,
-  PRIMARY KEY (`DeliveryID`)
+  `OrderID` varchar(10) DEFAULT NULL,
+  `EmployeeID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -82,10 +80,9 @@ INSERT INTO `delivery` (`DeliveryID`, `Method`, `Date`, `OrderID`, `EmployeeID`)
 --
 
 CREATE TABLE `employee` (
-  `EmployeeID` INT NOT NULL AUTO_INCREMENT,
+  `EmployeeID` varchar(10) NOT NULL,
   `Name` varchar(50) DEFAULT NULL,
-  `PhoneNum` int(11) DEFAULT NULL,
-  PRIMARY KEY (`EmployeeID`)
+  `PhoneNum` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -106,12 +103,11 @@ INSERT INTO `employee` (`EmployeeID`, `Name`, `PhoneNum`) VALUES
 --
 
 CREATE TABLE `file` (
-  `FileID` INT NOT NULL AUTO_INCREMENT,
-  `ProductID` INT DEFAULT NULL,
+  `FileID` varchar(10) NOT NULL,
+  `ProductID` varchar(10) DEFAULT NULL,
   `FileName` varchar(100) DEFAULT NULL,
   `FileLoc` varchar(100) DEFAULT NULL,
-  `AddDate` date DEFAULT NULL,
-  PRIMARY KEY (`FileID`)
+  `AddDate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -132,10 +128,9 @@ INSERT INTO `file` (`FileID`, `ProductID`, `FileName`, `FileLoc`, `AddDate`) VAL
 --
 
 CREATE TABLE `ingredient` (
-  `MaterialID` INT NOT NULL AUTO_INCREMENT,
+  `MaterialID` varchar(10) NOT NULL,
   `MaterialQty` varchar(10) DEFAULT NULL,
-  `Desc` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`MaterialID`)
+  `Desc` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -156,11 +151,10 @@ INSERT INTO `ingredient` (`MaterialID`, `MaterialQty`, `Desc`) VALUES
 --
 
 CREATE TABLE `material` (
-  `MaterialID` INT NOT NULL AUTO_INCREMENT,
+  `MaterialID` varchar(10) NOT NULL,
   `Name` varchar(50) DEFAULT NULL,
   `Category` varchar(50) DEFAULT NULL,
-  `Desc` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`MaterialID`)
+  `Desc` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -181,11 +175,10 @@ INSERT INTO `material` (`MaterialID`, `Name`, `Category`, `Desc`) VALUES
 --
 
 CREATE TABLE `meeting` (
-  `MeetingID` INT NOT NULL AUTO_INCREMENT,
+  `MeetingID` varchar(10) NOT NULL,
   `Date` date DEFAULT NULL,
   `Time` time DEFAULT NULL,
-  `Loc` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`MeetingID`)
+  `Loc` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -206,10 +199,9 @@ INSERT INTO `meeting` (`MeetingID`, `Date`, `Time`, `Loc`) VALUES
 --
 
 CREATE TABLE `meetingparticipant` (
-  `MeetingID` INT NOT NULL,
-  `EmpID` INT NOT NULL,
-  `CustomerID` INT DEFAULT NULL,
-  PRIMARY KEY (`MeetingID`,`EmpID`)
+  `MeetingID` varchar(10) NOT NULL,
+  `EmpID` varchar(10) NOT NULL,
+  `CustomerID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -230,12 +222,11 @@ INSERT INTO `meetingparticipant` (`MeetingID`, `EmpID`, `CustomerID`) VALUES
 --
 
 CREATE TABLE `order` (
-  `OrderID` INT NOT NULL AUTO_INCREMENT,
+  `OrderID` varchar(10) NOT NULL,
   `OrderDate` varchar(15) DEFAULT NULL,
   `Status` varchar(15) DEFAULT NULL,
-  `SaleID` INT DEFAULT NULL,
-  `CustomerID` INT DEFAULT NULL,
-  PRIMARY KEY (`OrderID`)
+  `SaleID` varchar(10) DEFAULT NULL,
+  `CustomerID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -256,10 +247,9 @@ INSERT INTO `order` (`OrderID`, `OrderDate`, `Status`, `SaleID`, `CustomerID`) V
 --
 
 CREATE TABLE `orderline` (
-  `OrderID` INT NOT NULL,
-  `ProductID` INT NOT NULL,
-  `Qty` int(11) DEFAULT NULL,
-  PRIMARY KEY (`OrderID`,`ProductID`)
+  `OrderID` varchar(10) NOT NULL,
+  `ProductID` varchar(10) NOT NULL,
+  `Qty` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -280,15 +270,14 @@ INSERT INTO `orderline` (`OrderID`, `ProductID`, `Qty`) VALUES
 --
 
 CREATE TABLE `payment` (
-  `PaymentID` INT NOT NULL AUTO_INCREMENT,
-  `OrderID` INT DEFAULT NULL,
+  `PaymentID` varchar(10) NOT NULL,
+  `OrderID` varchar(10) DEFAULT NULL,
   `PaymentDate` date DEFAULT NULL,
   `Due` date DEFAULT NULL,
   `Amount` int(11) DEFAULT NULL,
   `Type` varchar(15) DEFAULT NULL,
   `Status` varchar(15) DEFAULT NULL,
-  `Method` varchar(15) DEFAULT NULL,
-  PRIMARY KEY (`PaymentID`)
+  `Method` varchar(15) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -309,10 +298,9 @@ INSERT INTO `payment` (`PaymentID`, `OrderID`, `PaymentDate`, `Due`, `Amount`, `
 --
 
 CREATE TABLE `product` (
-  `ProductID` INT NOT NULL AUTO_INCREMENT,
+  `ProductID` varchar(10) NOT NULL,
   `Name` varchar(30) DEFAULT NULL,
-  `Desc` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`ProductID`)
+  `Desc` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -333,11 +321,10 @@ INSERT INTO `product` (`ProductID`, `Name`, `Desc`) VALUES
 --
 
 CREATE TABLE `productinventory` (
-  `ProductID` INT NOT NULL,
-  `WarehouseID` INT NOT NULL,
+  `ProductID` varchar(10) NOT NULL,
+  `WarehouseID` varchar(10) NOT NULL,
   `Qty` int(11) DEFAULT NULL,
-  `Loc` varchar(30) DEFAULT NULL,
-  PRIMARY KEY (`ProductID`,`WarehouseID`)
+  `Loc` varchar(30) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -358,13 +345,12 @@ INSERT INTO `productinventory` (`ProductID`, `WarehouseID`, `Qty`, `Loc`) VALUES
 --
 
 CREATE TABLE `productorder` (
-  `POrderID` INT NOT NULL AUTO_INCREMENT,
-  `ProductID` INT DEFAULT NULL,
-  `LineProductID` INT DEFAULT NULL,
+  `POrderID` varchar(10) NOT NULL,
+  `ProductID` varchar(10) DEFAULT NULL,
+  `LineProductID` varchar(10) DEFAULT NULL,
   `StartDate` date DEFAULT NULL,
   `Due` date DEFAULT NULL,
-  `Qty` int(11) DEFAULT NULL,
-  PRIMARY KEY (`POrderID`)
+  `Qty` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -385,10 +371,9 @@ INSERT INTO `productorder` (`POrderID`, `ProductID`, `LineProductID`, `StartDate
 --
 
 CREATE TABLE `purchase` (
-  `PurchaseID` INT NOT NULL AUTO_INCREMENT,
+  `PurchaseID` varchar(10) NOT NULL,
   `Date` date DEFAULT NULL,
-  `Amount` int(11) DEFAULT NULL,
-  PRIMARY KEY (`PurchaseID`)
+  `Amount` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -409,11 +394,10 @@ INSERT INTO `purchase` (`PurchaseID`, `Date`, `Amount`) VALUES
 --
 
 CREATE TABLE `purchaseline` (
-  `PurchaseID` INT NOT NULL,
-  `SupplierID` INT NOT NULL,
-  `MaterialID` INT NOT NULL,
-  `Qty` int(11) DEFAULT NULL,
-  PRIMARY KEY (`PurchaseID`,`SupplierID`,`MaterialID`)
+  `PurchaseID` varchar(10) NOT NULL,
+  `SupplierID` varchar(10) NOT NULL,
+  `MaterialID` varchar(10) NOT NULL,
+  `Qty` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -434,12 +418,11 @@ INSERT INTO `purchaseline` (`PurchaseID`, `SupplierID`, `MaterialID`, `Qty`) VAL
 --
 
 CREATE TABLE `supplier` (
-  `SupplierID` INT NOT NULL AUTO_INCREMENT,
+  `SupplierID` varchar(10) NOT NULL,
   `Name` varchar(50) DEFAULT NULL,
   `PhoneNum` int(11) DEFAULT NULL,
   `Address` varchar(200) DEFAULT NULL,
-  `Email` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`SupplierID`)
+  `Email` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -460,10 +443,9 @@ INSERT INTO `supplier` (`SupplierID`, `Name`, `PhoneNum`, `Address`, `Email`) VA
 --
 
 CREATE TABLE `warehouse` (
-  `WarehouseID` INT NOT NULL AUTO_INCREMENT,
+  `WarehouseID` varchar(10) NOT NULL,
   `Name` varchar(50) DEFAULT NULL,
-  `Address` varchar(200) DEFAULT NULL,
-  PRIMARY KEY (`WarehouseID`)
+  `Address` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
