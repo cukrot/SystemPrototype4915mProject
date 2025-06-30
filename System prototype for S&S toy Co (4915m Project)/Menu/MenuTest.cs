@@ -38,38 +38,23 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
         }
         private void btnMasterData_Click(object sender, EventArgs e)
         {
-            hideAllSubButtons();
             menuController.btnClicked_MasterData();
-            btnSub1.Text = "View Customer Data";
-            btnSub1.Visible = true;
-            btnSub2.Text = "View Employee Data";
-            btnSub2.Visible = true;
+
         }
 
         private void btnPRequirement_Click(object sender, EventArgs e)
         {
-            hideAllSubButtons();
             menuController.btnClicked_ProductRequirement();
-            btnSub1.Text = "View Product Requirements";
-            btnSub1.Visible = true;
         }
 
         private void btnInv_Click(object sender, EventArgs e)
         {
-            hideAllSubButtons();
             menuController.btnClicked_Inventory();
-            btnSub1.Text = "View Product Inventory";
-            btnSub1.Visible = true;
-            btnSub2.Text = "View Material Inventory";
-            btnSub2.Visible = true;
         }
 
         private void btnDelivery_Click(object sender, EventArgs e)
         {
-            hideAllSubButtons();
             menuController.btnClicked_Delivery();
-            btnSub1.Text = "View Delivery Order Data";
-            btnSub1.Visible = true;
         }
 
         private void btnSub2_Click(object sender, EventArgs e)
@@ -80,6 +65,54 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
         private void btnSub1_Click(object sender, EventArgs e)
         {
             menuController.btnClicked_Sub1();
+        }
+
+        private void btnTestMenu_Click(object sender, EventArgs e)
+        {
+            hideAllSubButtons();
+            menuController.btnClicked_TestMenu();
+            btnSub1.Text = "Just Testing 2 Menu";
+            btnSub1.Visible = true;
+        }
+
+        public void setSubButtons(string v, string[] subItems)
+        {
+            hideAllSubButtons();
+            int length = subItems.Length;
+            switch (length)
+            {
+                case 1:
+                    btnSub1.Text = subItems[0];
+                    btnSub1.Visible = true;
+                    break; // Add break to prevent fall-through
+                case 2:
+                    btnSub1.Text = subItems[0];
+                    btnSub1.Visible = true;
+                    btnSub2.Text = subItems[1];
+                    btnSub2.Visible = true;
+                    break; // Add break to prevent fall-through
+                case 3:
+                    btnSub1.Text = subItems[0];
+                    btnSub1.Visible = true;
+                    btnSub2.Text = subItems[1];
+                    btnSub2.Visible = true;
+                    btnSub3.Text = subItems[2];
+                    btnSub3.Visible = true;
+                    break; // Add break to prevent fall-through
+                case 4:
+                    btnSub1.Text = subItems[0];
+                    btnSub1.Visible = true;
+                    btnSub2.Text = subItems[1];
+                    btnSub2.Visible = true;
+                    btnSub3.Text = subItems[2];
+                    btnSub3.Visible = true;
+                    btnSub4.Text = subItems[3];
+                    btnSub4.Visible = true;
+                    break; // Add break to prevent fall-through
+                default:
+                    MessageBox.Show("No Sub Menu Items Available");
+                    break;
+            }
         }
     }
 }

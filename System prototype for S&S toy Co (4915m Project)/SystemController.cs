@@ -11,15 +11,40 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
     internal class SystemController
     {
         private LoginController _loginController;
+        private MenuTest menu;
+        private MenuController menuController;
+        private string[] departments = new string[]
+        {
+            "MasterData Management",
+            "Product Requirements",
+            "Inventory Management",
+            "Delivery Management",
+            "Human Resource Management"
+        };
+        Dictionary<string, string> employeeInfo = new Dictionary<string, string>
+        {
+            { "EmployeeID", "" },
+            { "Department", "" },
+            { "Position", "" },
+            { "Status", "" }
+        };
         public SystemController(LoginController login)
         {
             _loginController = login;
+            menuController = new MenuController();
         }
-        public void Start()
+        public void login()
         {
-            MenuTest menu = new MenuTest();
-            MenuController menuController = new MenuController(_loginController, menu);
-            menu.Show();
+            menuController.callMenu();
+        }
+
+        internal void SetEmployeeInfo(string v1, string v2, string v3)
+        {
+            employeeInfo["EmployeeID"] = v1;
+            employeeInfo["Department"] = v2;
+            employeeInfo["Position"] = v3;
+            // Set the status to "Active" by default
+            employeeInfo["Status"] = "Active";
         }
     }
 }

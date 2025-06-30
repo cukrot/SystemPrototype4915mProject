@@ -38,6 +38,7 @@
             btnSub1 = new Button();
             btnSub3 = new Button();
             btnSub4 = new Button();
+            btnTestMenu = new Button();
             flowLayoutPanel1.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             SuspendLayout();
@@ -59,6 +60,7 @@
             flowLayoutPanel1.Controls.Add(btnPRequirement);
             flowLayoutPanel1.Controls.Add(btnInv);
             flowLayoutPanel1.Controls.Add(btnDelivery);
+            flowLayoutPanel1.Controls.Add(btnTestMenu);
             flowLayoutPanel1.Location = new Point(29, 100);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Size = new Size(178, 338);
@@ -147,6 +149,16 @@
             btnSub4.Text = "button11";
             btnSub4.UseVisualStyleBackColor = true;
             // 
+            // btnTestMenu
+            // 
+            btnTestMenu.Location = new Point(3, 165);
+            btnTestMenu.Name = "btnTestMenu";
+            btnTestMenu.Size = new Size(75, 75);
+            btnTestMenu.TabIndex = 4;
+            btnTestMenu.Text = "Test menu";
+            btnTestMenu.UseVisualStyleBackColor = true;
+            btnTestMenu.Click += btnTestMenu_Click;
+            // 
             // MenuTest
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -173,5 +185,6 @@
         private Button btnSub1;
         private Button btnSub3;
         private Button btnSub4;
+        private Button btnTestMenu;
     }
 }
