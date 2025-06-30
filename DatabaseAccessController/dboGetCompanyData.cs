@@ -115,23 +115,36 @@ namespace DatabaseAccessController
             //As key value is a string like "CUST001" or "ORD0001, we need to get the last value from the database by calling GetData method
             string keyName = primaryKeys[tableName][0];
             DataTable dtLastKey = GetData($"SELECT MAX(`{keyName}`) FROM `{tableName}`;");
-            string lastKey = dtLastKey.Rows[0][keyName].ToString();
+            string lastKey = dtLastKey.Rows[0][0]?.ToString(); // Get the last key value from the database
+
+            int prefixLength = 0;
+            int numericPartLength = 0;
             if (string.IsNullOrEmpty(lastKey))
             {
                 lastKey = "000"; // Start from 000 if no previous key exists
             }
             else
             {
-                // Extract the numeric part and increment it
-                int numericPart = int.Parse(lastKey.Substring(3)) + 1; // Assuming the key format is like "CUST001"
-                lastKey = lastKey.Substring(0, 3) + numericPart.ToString("D3"); // Format as "CUST002"
+                // Check number of aphabetical prefix and numeric suffix
+                prefixLength = lastKey.TakeWhile(char.IsLetter).Count(); // Count letters at the start
+                numericPartLength = lastKey.Length - prefixLength; // Remaining part is numeric
+
+                // Now we can increment the numeric part
+                if (numericPartLength < 3)
+                {
+                    throw new ArgumentException($"The key value '{lastKey}' is not in the expected format with at least 3 digits after the prefix.", nameof(dtInserted));
+                }
+                // Increment the numeric part
+                lastKey = lastKey.Substring(0, prefixLength) + (int.Parse(lastKey.Substring(prefixLength)) + 1).ToString("D3"); // Increment the numeric part
+
             }
             // Assign the new key value to the key column in the inserted DataTable
             foreach (DataRow row in dtInserted.Rows)
             {
                 row[keyName] = lastKey; // Assign the new key value
-                lastKey = lastKey.Substring(0, 3) + (int.Parse(lastKey.Substring(3)) + 1).ToString("D3"); // Increment for the next row
+                lastKey = lastKey.Substring(0, prefixLength) + (int.Parse(lastKey.Substring(prefixLength)) + 1).ToString("D3"); // Increment for the next row
             }
+
             return dtInserted; // Return the modified DataTable with new key values
         }
 
