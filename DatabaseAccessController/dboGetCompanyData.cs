@@ -59,52 +59,79 @@ namespace DatabaseAccessController
         }
 
         public int InsertTable(DataTable dtInserted, string tableName) // Inserts multiple rows into the specified table
-                                                                       //I forget to check if values in key columns are null or not, now I am modifying the code to handle that
         {
             if (dtInserted == null || dtInserted.Rows.Count == 0)
             {
                 throw new ArgumentException("The DataTable to insert cannot be null or empty.", nameof(dtInserted));
             }
-            // I have to use switch statement to handle different table names, as each table may have different key columns
-            // Get the primary keys for the specified table by calling a new method
-            string[] keysName = primaryKeys.ContainsKey(tableName) ? primaryKeys[tableName] : null;
-            // Then check if values in key columns are null or not
-            if (keysName != null)
+
+            //We need to check the table if it has single or multiple keys
+            // If the table has a single key, call InsertDataWithNoKeys
+            if (primaryKeys.ContainsKey(tableName) && primaryKeys[tableName].Length == 1)
+                // If the table has a single key, we can insert data with keys
+                return InsertDataNullKeys(dtInserted, tableName);
+            else  // If the table has multiple keys, we need to handle it differently
+                return InsertDataWithKey(dtInserted, tableName);
+        }
+
+        private int InsertDataWithKey(DataTable dtInserted, string tableName)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"INSERT INTO `{tableName}` (");
+            sb.Append(string.Join(", ", dtInserted.Columns.Cast<DataColumn>().Select(col => $"`{col.ColumnName}`")));
+            sb.Append(") VALUES ");
+
+            var valueRows = new List<string>();
+            foreach (DataRow row in dtInserted.Rows)
             {
+                var values = dtInserted.Columns.Cast<DataColumn>()
+                    .Select(col => $"'{row[col].ToString().Replace("'", "''")}'");
+                valueRows.Add("(" + string.Join(", ", values) + ")");
+            }
+            sb.Append(string.Join(", ", valueRows));
+            sb.Append(";");
+
+            return BatchUpdate(sb.ToString());
+        }
+
+        private int InsertDataNullKeys(DataTable dtInserted, string tableName)
+        {
+            //first check if values in key column in the inserted table is null or empty string, else throw exception
+            //primaryKeys[tableName] is the name of the key columns for the table
+            //Assuming only one key column exists in the table
+            if (primaryKeys.ContainsKey(tableName) && primaryKeys[tableName].Length == 1)
+            {
+                string keyColumn = primaryKeys[tableName][0];
                 foreach (DataRow row in dtInserted.Rows)
                 {
-                    foreach (string key in keysName)
+                    if (row[keyColumn] != DBNull.Value && !string.IsNullOrEmpty(row[keyColumn].ToString()))
                     {
-                        if (row[key] == DBNull.Value || string.IsNullOrEmpty(row[key].ToString()))
-                        {
-                            throw new ArgumentException($"Key column '{key}' cannot be null or empty for table '{tableName}'.", nameof(dtInserted));
-                        }
+                        throw new ArgumentException($"The key column '{keyColumn}' must be null or empty for insertion into '{tableName}'.", nameof(dtInserted));
                     }
                 }
             }
-            // Before inserting, asign a new value to the key columns
+
+            // Build the SQL command to insert data into the specified table like above method, but without key columns
+            // 取得主鍵欄位名稱
+            string[] keyColumns = primaryKeys.ContainsKey(tableName) ? primaryKeys[tableName] : Array.Empty<string>();
+
+
 
             StringBuilder sb = new StringBuilder();
             sb.Append($"INSERT INTO `{tableName}` (");
-            // Append column names
-            foreach (DataColumn col in dtInserted.Columns)
-            {
-                sb.Append($"`{col.ColumnName}`,");
-            }
-            sb.Length -= 2; // Remove the last comma and space
+            sb.Append(string.Join(", ", nonKeyColumns.Select(col => $"`{col.ColumnName}`")));
             sb.Append(") VALUES ");
-            // Append values for each row
+
+            var valueRows = new List<string>();
             foreach (DataRow row in dtInserted.Rows)
             {
-                sb.Append("(");
-                foreach (DataColumn col in dtInserted.Columns)
-                {
-                    sb.Append($"'{row[col]}', ");
-                }
-                sb.Length -= 2; // Remove the last comma and space
-                sb.Append("), ");
+                var values = nonKeyColumns
+                    .Select(col => $"'{row[col].ToString().Replace("'", "''")}'");
+                valueRows.Add("(" + string.Join(", ", values) + ")");
             }
-            sb.Length -= 2; // Remove the last comma and space
+            sb.Append(string.Join(", ", valueRows));
+            sb.Append(";");
+
             return BatchUpdate(sb.ToString());
         }
 

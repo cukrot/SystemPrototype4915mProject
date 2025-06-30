@@ -108,27 +108,6 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
         }
 
 
-        public String[] GetCustomerColumnsName()
-        {
-            return customerColsName;
-        }
-
-
-
-        /*public async Task<int> InsertCustomerData(string tableName, string[] values)
-        {
-            //Anyway, this method is used to insert data into the customer table
-            //So no need of keyColumns, as it is not used in the insert operation
-
-            //Get the empty Table from API or predefined columns
-            DataTable mmptyCustomer = await GetEmptyTable(tableName);
-            if (mmptyCustomer == null || mmptyCustomer.Columns.Count == 0)
-            {
-                throw new InvalidOperationException($"No empty table found for the specified table: {tableName}.");
-            }
-            int rowsAffected = await InsertTableRow(tableName, mmptyCustomer, values);
-            return rowsAffected;
-        }*/
 
         internal async Task<int> InsertCustomerData(Dictionary<string, string> values) //Ingore the above method, this is the one you should use
         {
