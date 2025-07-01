@@ -30,7 +30,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
             { "Product Requirements", new string[] { "View Requirements", "Add Requirements" } },
             { "Inventory Management", new string[] { "View Products", "View Material" } },
             { "Delivery Management", new string[] { "View Delivery Order", "Add Delivery Order" } },
-            { "Test Menu", new string[] { "Just Testing 2" } }
+            { "Test Menu", new string[] { "Just Testing 2", "TestAnything" } }
         };
         public String menuCurrent { get; set; }
         public void callMenu()
@@ -39,7 +39,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
             this.menu = menu;
             menu.Show();
         }
-        public void btnClicked_Sub1()
+        public void btnClicked_Sub1() //This method is called by the sub button 1 in the menu   // < 1st > sub button
         {
             switch (menuCurrent)
             {
@@ -67,7 +67,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
                     throw new InvalidOperationException("Unknown menu item: " + menuCurrent);
             }
         }
-        internal void btnClicked_Sub2()
+        internal void btnClicked_Sub2() //This method is called by the sub button 2 in the menu   // < 2nd > sub button
         {
             switch (menuCurrent)
             {
@@ -84,6 +84,10 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
                     break;
                 case "Delivery Management":
                     //Form form_delivery_add = new Delivery.AddDeliveryOrder();
+                    break;
+                case "Test Menu":
+                    Form form_test2 = new JustTesting.TestAnything();
+                    form_test2.Show();
                     break;
                 default:
                     throw new InvalidOperationException("Unknown menu item: " + menuCurrent);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EntityModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,13 +22,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
             "Delivery Management",
             "Human Resource Management"
         };
-        Dictionary<string, string> employeeInfo = new Dictionary<string, string>
-        {
-            { "EmployeeID", "" },
-            { "Department", "" },
-            { "Position", "" },
-            { "Status", "" }
-        };
+        EmpInfo EmpInfo = null;
         public SystemController(LoginController login)
         {
             _loginController = login;
@@ -38,13 +33,17 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
             menuController.callMenu();
         }
 
-        internal void SetEmployeeInfo(string v1, string v2, string v3)
+        public void SetEmployeeInfo(EmpInfo empInfo)
         {
-            employeeInfo["EmployeeID"] = v1;
-            employeeInfo["Department"] = v2;
-            employeeInfo["Position"] = v3;
-            // Set the status to "Active" by default
-            employeeInfo["Status"] = "Active";
+            if (empInfo != null)
+            {
+                this.EmpInfo = EmpInfo;
+                // You can also set the menu based on the employee's department or position if needed
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(EmpInfo), "Employee information cannot be null.");
+            }
         }
     }
 }

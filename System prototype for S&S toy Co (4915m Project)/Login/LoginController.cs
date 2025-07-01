@@ -41,14 +41,13 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Login
                         // Read the response content as a string
                         string jasonString = await response.Content.ReadAsStringAsync();
 
-                        // Deserialize the JSON response to a dictionary
-                        Dictionary<string, string> loginEmpInfo = JsonConvert.DeserializeObject<Dictionary<string, string>>(jasonString);
-                        // loginEmpInfo includes EmployeeID, Department, Position, and Status
+                        // Deserialize the JSON response to EmpInfo object
+                        EmpInfo loginEmpInfo = JsonConvert.DeserializeObject<EmpInfo>(jasonString);
                         // Check if the login was successful in isLoginSuccess field
-                        if (!loginEmpInfo.ContainsKey("isLoginSuccess") || loginEmpInfo["isLoginSuccess"] != "true")
+                        if (loginEmpInfo.isLoginSuccess == "false")
                         {
                             // Check if the user is locked out by checking the "Status" field
-                            if (loginEmpInfo.ContainsKey("Status") && loginEmpInfo["Status"] == "Locked")
+                            if ( loginEmpInfo.Status == "Locked")
                             {
                                 // If the user is locked out, show an error message
                                 MessageBox.Show("Your account is locked. Please contact support.");
@@ -58,10 +57,10 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Login
                             MessageBox.Show("Login failed. Please check your username and password.");
                             return false;
                         }
-                        else if (loginEmpInfo.ContainsKey("EmployeeID") && !string.IsNullOrEmpty(loginEmpInfo["EmployeeID" ]))
+                        else if (loginEmpInfo.isLoginSuccess == "true" && !string.IsNullOrEmpty(loginEmpInfo.EmployeeID))
                         {
                             // If login is successful and EmployeeID is found, set the system controller's employee info
-                            systemController.SetEmployeeInfo(loginEmpInfo["EmployeeID"], loginEmpInfo["Department"], loginEmpInfo["Position"]);
+                            systemController.SetEmployeeInfo(loginEmpInfo);
 
                             // If login is successful, start the system controller
                             systemController.login();
@@ -102,7 +101,16 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Login
         {
             // This method is for testing purposes only, it should not be used in production code.
             // It simulates a successful login without making an actual API call.
-            systemController.SetEmployeeInfo("root", "root", "root"); // Set test employee info
+            //systemController.SetEmployeeInfo("root", "root", "root"); // Set test employee info
+            EmpInfo testEmpInfo = new EmpInfo
+            {
+                EmployeeID = "0",
+                Department = "root",
+                Position = "root",
+                Status = "Active",
+                isLoginSuccess = "true"
+            };
+            systemController.SetEmployeeInfo(testEmpInfo); // Set test employee info
             systemController.login();
             loginPage.Hide(); // Hide the login page
             return true;

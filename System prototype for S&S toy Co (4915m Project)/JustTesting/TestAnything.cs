@@ -14,6 +14,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
 {
     public partial class TestAnything : Form
     {
+        TestControll controll;
         public TestAnything()
         {
             InitializeComponent();
@@ -23,6 +24,19 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
         {
             string pw = textBox1.Text;
             string hasdhedPw = HashPassword(pw);
+            string username = textBox2.Text;
+            DataTable dt = (DataTable)dataGridView1.DataSource;
+            // Get the first row of the DataTable to modify
+            DataRow row = dt.Rows[0];
+            row.BeginEdit();
+            row[row.Table.Columns[1]] = username;
+            row[row.Table.Columns[2]] = hasdhedPw;
+            row.EndEdit();
+            row.AcceptChanges(); // Accept changes to the row
+            dataGridView1.DataSource = dt; // Refresh the DataGridView to show the new row
+            dataGridView1.Refresh(); // Ensure the DataGridView is updated
+            // Accept changes to the DataTable
+            dt.AcceptChanges();
         }
         public static string HashPassword(string password)
         {
@@ -36,6 +50,31 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
                 }
                 return builder.ToString();
             }
+        }
+
+        private void btnReload_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void button2_Click(object sender, EventArgs e)
+        {
+            DataTable dt = (DataTable)dataGridView1.DataSource;
+            int affectedRows = await controll.UpdateUserData(dt);
+            if (affectedRows > 0)
+            {
+                MessageBox.Show($"{affectedRows} rows updated successfully.");
+            }
+            else
+            {
+                MessageBox.Show("No rows were updated.");
+            }
+        }
+
+        private async void TestAnything_Load(object sender, EventArgs e)
+        {
+            controll = new TestControll();
+            dataGridView1.DataSource = await controll.GetUserData();
         }
     }
 }

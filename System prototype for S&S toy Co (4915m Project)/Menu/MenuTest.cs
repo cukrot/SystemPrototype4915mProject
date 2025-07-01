@@ -71,8 +71,6 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
         {
             hideAllSubButtons();
             menuController.btnClicked_TestMenu();
-            btnSub1.Text = "Just Testing 2 Menu";
-            btnSub1.Visible = true;
         }
 
         public void setSubButtons(string v, string[] subItems)
