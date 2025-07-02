@@ -205,6 +205,7 @@
             btnSub3.TabIndex = 1;
             btnSub3.Text = "button10";
             btnSub3.UseVisualStyleBackColor = true;
+            btnSub3.Click += btnSub3_Click;
             // 
             // btnSub4
             // 

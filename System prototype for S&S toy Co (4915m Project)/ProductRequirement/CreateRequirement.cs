@@ -34,10 +34,11 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
             // Assuming control has a method to find product by ID, and it returns a DataRow or similar object
             try
             {
-                DataRow productInfo = await control.GetProductById(id);
+                DataRow[] productInfo = await control.GetProductById(id);
                 if (productInfo != null)
                 {
-                    dtProductInfo.DataSource = productInfo;
+                    DataTable dataTable = productInfo.CopyToDataTable(); // Convert DataRow array to DataTable
+                    dtProductInfo.DataSource = dataTable;
                 }
                 else
                 {
@@ -79,7 +80,10 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
         private void CreateRequirement_Load(object sender, EventArgs e)
         {
             string saleID = control.GetSaleID();
-            DateTime date = DateTime.Today;
+            // Date format : "yyyy-MM-dd"
+            DateTime currentDate = DateTime.Today;
+            lblEmpID.Text = saleID;
+            lblDate.Text = currentDate.ToString("yyyy-MM-dd");
         }
 
         private async void btnAddProduct_Click(object sender, EventArgs e) //Add product to the requirement
@@ -97,8 +101,8 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
                 bool isAdded = false;
                 try
                 {
-                    await control.AddProductToRequirement(productID, quantity);
-
+                    DataTable dt= await control.AddProductToRequirement(productID, quantity);
+                    dtOrderline.DataSource = dt;
                 }
                 catch (Exception ex)
                 {
@@ -113,8 +117,26 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
 
         private void btnRemoveProduct_Click(object sender, EventArgs e)
         {
-            //DataRow selectedRow = ((DataRowView)dtOrderline.SelectedRows[0].DataBoundItem).Row;
+            if (dtOrderline.SelectedRows.Count == 0 || dtOrderline.SelectedRows[0].DataBoundItem == null)
+            {
+                MessageBox.Show("Please select a product to remove.");
+                return;
+            }
+            DataRow selectedRow = ((DataRowView)dtOrderline.SelectedRows[0].DataBoundItem).Row;
+            string productID = selectedRow["ProductID"].ToString();
+            // Assuming control has a method to remove product from the requirement
+            try
+            {
+                dtOrderline.DataSource = control.RemoveProductFromRequirement(productID);
+                MessageBox.Show("Product removed successfully.");
+                // Refresh the order line data grid view
+                dtOrderline.Refresh();
 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error removing product: {ex.Message}");
+            }
         }
 
         private void btnSubmit_Click(object sender, EventArgs e) //Insert the requirement into the database
@@ -127,7 +149,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
             {
                 DataRow selectedRow = ((DataRowView)dtProductInfo.SelectedRows[0].DataBoundItem).Row;
                 txtProductID.Text = selectedRow["ProductID"].ToString();
-                txtProductName.Text = selectedRow["ProductName"].ToString();
+                txtProductName.Text = selectedRow["Name"].ToString();
             }
         }
     }

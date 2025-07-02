@@ -122,5 +122,15 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
         {
             menuController.setSubMenu(8);
         }
+
+        private void btnSub3_Click(object sender, EventArgs e)
+        {
+            menuController.btnClicked_Sub(2);
+        }
+
+        private void btnSub4_Click(object sender, EventArgs e)
+        {
+            menuController.btnClicked_Sub(3);
+        }
     }
 }

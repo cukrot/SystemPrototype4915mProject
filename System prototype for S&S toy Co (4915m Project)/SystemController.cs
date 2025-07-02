@@ -24,7 +24,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
         Dictionary<string, string[]> subSytemPages = new Dictionary<string, string[]>
         {
             { "MasterData Management", new string[] { "Customer Data", "Employee Data", } },
-            { "Product Requirements", new string[] { "View Product Requirements", "Edit Product Requirements" } },
+            { "Product Requirements", new string[] { "View Product Requirements", "Edit Product Requirements", "Create Product Requirements" } },
             { "Production Processing Management", new string[] { "View Production Order", "Add Production Order" } },
             { "Material Procurement", new string[] { "View Material Order", "Add Material Order" } },
             { "Dispatch Processing", new string[] { "View Dispatch Order", "Add Dispatch Order" } },
