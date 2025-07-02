@@ -54,7 +54,7 @@ namespace DatabaseAccessController
 
         public DataTable GetTableData(String tableName)
         {
-            String sqlCmd = "SELECT * FROM " + tableName +";";
+            String sqlCmd = $"SELECT * FROM `{tableName}`;";
             return GetData(sqlCmd);
         }
 

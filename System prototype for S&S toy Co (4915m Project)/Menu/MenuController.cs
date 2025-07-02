@@ -4,61 +4,50 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System_prototype_for_S_S_toy_Co__4915m_Project_.Login;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
 {
     public class MenuController
     {
-        MenuTest menu;
-        LoginController loginController;
-        public MenuController() {
-            menuCurrent = menuItems[0]; // Default to the first item
-        }
-        public MenuController(LoginController login, MenuTest menu)
+        private SystemController systemController;
+        private MenuTest menu;
+        private string[] menuOfSubsystem;
+        private Dictionary<string, string[]> subSystemPages;
+        private string menuCurrent { get; set; }
+        public MenuController(SystemController systemController, string[] accessControlOfSubsytem, Dictionary<string, string[]> subSystemPages)
         {
-            menuCurrent = menuItems[0]; // Default to the first item
-            loginController = login;
-            this.menu = menu;
-            menu.setMenuController(this);
+            this.systemController = systemController;
+            menuOfSubsystem = accessControlOfSubsytem;
+            this.subSystemPages = subSystemPages;
+            menuCurrent = menuOfSubsystem[0]; // Default to the first item
+            menu = null;
         }
-        String [] menuItems =
-        {
-            "MasterData Management",
-            "Product Requirements",
-            "Inventory Management",
-            "Delivery Management",
-        };
-        public String menuCurrent { get; set; }
+
+
         public void callMenu()
         {
             MenuTest menu = new MenuTest(this);
+            this.menu = menu;
+            menu.setSubMenuVisible(menuOfSubsystem.Length, menuOfSubsystem);
+            menu.setSubButtonsVisible(subSystemPages[menuCurrent].Length, subSystemPages[menuCurrent]);
             menu.Show();
         }
-        internal void btnClicked_Sub1()
+        public void btnClicked_Sub(int pageIndex)
         {
-            switch (menuCurrent)
+            try {
+            systemController.openSubSystemPage(menuCurrent, pageIndex);
+            }
+            catch (Exception ex)
             {
-                case "MasterData Management":
-                    Form form_masterdata_cus = new MasterData.CustomerData();
-                    form_masterdata_cus.Show();
-                    break;
-                case "Product Requirements":
-                    Form form_requirement_view = new ProductRequirement.ViewRequirements();
-                    form_requirement_view.Show();
-                    break;
-                case "Inventory Management":
-                    Form form_inv_viewProduct = new Inventory.ViewProducts();
-                    form_inv_viewProduct.Show();
-                    break;
-                case "Delivery Management":
-                    Form form_delivery_view = new Delivery.ViewDeliveryOrder();
-                    form_delivery_view.Show();
-                    break;
-                default:
-                    throw new InvalidOperationException("Unknown menu item: " + menuCurrent);
+                // Handle any exceptions that may occur
+                MessageBox.Show($"An error occurred: {ex.Message}");
             }
         }
-        internal void btnClicked_Sub2()
+
+
+
+        internal void btnClicked_Sub2() //This method is called by the sub button 2 in the menu   // < 2nd > sub button
         {
             switch (menuCurrent)
             {
@@ -76,31 +65,47 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
                 case "Delivery Management":
                     //Form form_delivery_add = new Delivery.AddDeliveryOrder();
                     break;
+                case "Test Menu":
+                    Form form_test2 = new JustTesting.TestAnything();
+                    form_test2.Show();
+                    break;
                 default:
                     throw new InvalidOperationException("Unknown menu item: " + menuCurrent);
             }
         }
 
-        internal void btnClicked_MasterData()
+        internal void setSubMenu(int index)
         {
-            menuCurrent = menuItems[0];
+            if (index > menuOfSubsystem.Length) //
+            {
+                MessageBox.Show("Invalid index for submenu selection.");
+            }
+            else if (index < 0)
+            {
+                MessageBox.Show("Invalid index for submenu selection.");
+            }
+            else
+            {
+                menuCurrent = menuOfSubsystem[index]; // Set the current menu to the selected submenu
+                if (menu != null) // If the menu is already created, update the buttons
+                {
+                    menu.setSubButtonsVisible(subSystemPages[menuCurrent].Length, subSystemPages[menuCurrent]);
+                }
+            }
         }
-
-        internal void btnClicked_ProductRequirement()
+        /*
+        private string[] menuOfSubsystem =
         {
-            menuCurrent = menuItems[1];
-        }
-
-        internal void btnClicked_Inventory()
-        {
-            menuCurrent = menuItems[2];
-        }
-
-        internal void btnClicked_Delivery()
-        {
-            menuCurrent = menuItems[3];
-        }
-
-
+           "MasterData Management", //IT
+           "Product Requirements", //sale, marketing, sale & marketing
+           "Production Processing Management", //Production
+           "Material Procurement", //Supply Chain Management
+           "Inventory Management", //Inventory Management, Supply Chain Management
+           "Dispatch Processing", //Supply Chain Management
+           "After Service Management", //Customer Service Department
+           "Administration Management", //IT
+           "Test Menu" //Just for testing purposes
+        };
+        */
     }
 }

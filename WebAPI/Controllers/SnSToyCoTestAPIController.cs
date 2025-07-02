@@ -50,12 +50,17 @@ namespace WebAPI.Controllers
         {
             try
             {
+                DataTable dtInserted = JsonConvert.DeserializeObject<DataTable>(json.dtAdded);
                 DataTable dtUpdated = JsonConvert.DeserializeObject<DataTable>(json.dtModified);
                 String tableName = JsonConvert.DeserializeObject<String>(json.tableName);
                 String[] keysName = JsonConvert.DeserializeObject<String[]>(json.keysName);
 
                 dboGetCompanyData dboGetCompanyData = new dboGetCompanyData(_configuration["ConnectionStrings_of_snstoycotest"]);
-                int rowsUpdated = dboGetCompanyData.UpdateTable(dtUpdated, tableName, keysName);
+                int rowsUpdated = 0;
+                if (dtUpdated != null)
+                    rowsUpdated = dboGetCompanyData.UpdateTable(dtUpdated, tableName, keysName);
+                if (dtInserted != null)
+                    rowsUpdated = dboGetCompanyData.InsertTable(dtInserted, tableName);
                 return rowsUpdated;
             }
             catch (Exception ex)

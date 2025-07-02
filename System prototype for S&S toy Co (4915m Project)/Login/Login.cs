@@ -17,18 +17,15 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Login
         public Login()
         {
             InitializeComponent();
-            loginController = new LoginController();
+            loginController = new LoginController(this);
         }
 
         private async void btnLogin_Click(object sender, EventArgs e)
         {
             String username = txtUserName.Text;
             String password = txtPassword.Text;
-            if (await loginController.Login(username, password))
-            {
-                Close();
-            }
-            else
+            bool isValid = await loginController.Login(username, password);
+            if (!isValid)
             {
                 MessageBox.Show("Incorrect user name or password. "
                             + "Please try again.");

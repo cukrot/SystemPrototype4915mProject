@@ -17,6 +17,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
     public class TestControll2 : SubSystemController
     {
         DataTable customer;
+        DataTable user;
         private String[] customerColsName = new string[]
         {
             "CustomerID", "Name", "PhoneNum", "Address", "Email"
@@ -73,11 +74,32 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             }
             return dt;
         }
+        public async Task<DataTable> GetUserData()
+        {
+            DataTable dt = null;
+            try
+            {
+                dt = await GetTableData("user"); //specify table name
+                //Or you can use GetData()
+                //dt = await GetData("GetTableData", "user"); //specify endpoint & table name
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return dt;
+        }
 
         public async Task<int> UpdateCustomerDataToAPI(DataTable dtUpdated)
         {
             // Use keyColumns field instead of local variable
             int rowsUpdated = await UpdateData(dtUpdated, "customer", customerKeyColumns);
+            return rowsUpdated;
+        }
+        public async Task<int> UpdateUserDataToAPI(DataTable dtUpdated)
+        {
+            // This method is used to update user data in the API
+            int rowsUpdated = await UpdateData(dtUpdated, "user", new string[] { "UserID" });
             return rowsUpdated;
         }
 

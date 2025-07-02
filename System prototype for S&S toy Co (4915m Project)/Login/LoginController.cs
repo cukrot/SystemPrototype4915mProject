@@ -12,6 +12,12 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Login
 {
     public class LoginController
     {
+        private Login loginPage;
+        private SystemController systemController;
+        public LoginController(Login loginPage) {
+            this.loginPage = loginPage;
+            this.systemController = new SystemController(this);
+        }
         public async Task<bool> Login(String username, String password)
         {
             try
@@ -33,14 +39,41 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Login
                     if (response.IsSuccessStatusCode)
                     {
                         // Read the response content as a string
-                        string responseString = await response.Content.ReadAsStringAsync();
+                        string jasonString = await response.Content.ReadAsStringAsync();
 
-                        // Parse the response string to an integer
-                        bool login = bool.Parse(responseString);
+                        // Deserialize the JSON response to EmpInfo object
+                        EmpInfo loginEmpInfo = JsonConvert.DeserializeObject<EmpInfo>(jasonString);
+                        // Check if the login was successful in isLoginSuccess field
+                        if (loginEmpInfo.isLoginSuccess == "false")
+                        {
+                            // Check if the user is locked out by checking the "Status" field
+                            if ( loginEmpInfo.Status == "Locked")
+                            {
+                                // If the user is locked out, show an error message
+                                MessageBox.Show("Your account is locked. Please contact support.");
+                                return false;
+                            }
+                            // If login is not successful, show an error message
+                            MessageBox.Show("Login failed. Please check your username and password.");
+                            return false;
+                        }
+                        else if (loginEmpInfo.isLoginSuccess == "true" && !string.IsNullOrEmpty(loginEmpInfo.EmployeeID))
+                        {
+                            // If login is successful and EmployeeID is found, set the system controller's employee info
 
-                        // If login is successful, you can proceed with the next steps
-                        startSystemController();
-                        return login;
+                            // If login is successful, start the system controller
+                            systemController.login(loginEmpInfo);
+                            // Hide the login page
+                            loginPage.Hide();
+
+                        }
+                        else
+                        {
+                            // If EmployeeID is not found, show an error message
+                            MessageBox.Show("Login failed. Employee information not found.");
+                            return false;
+                        }
+                        return true;
                     }
                     else
                     {
@@ -67,13 +100,18 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Login
         {
             // This method is for testing purposes only, it should not be used in production code.
             // It simulates a successful login without making an actual API call.
-            startSystemController();
+            //systemController.SetEmployeeInfo("root", "root", "root"); // Set test employee info
+            EmpInfo testEmpInfo = new EmpInfo
+            {
+                EmployeeID = "0",
+                Department = "root",
+                Position = "root",
+                Status = "Active",
+                isLoginSuccess = "true"
+            };
+            systemController.login(testEmpInfo);
+            loginPage.Hide(); // Hide the login page
             return true;
-        }
-        public void startSystemController()
-        {
-            SystemController systemController = new SystemController(this);
-            systemController.Start();
         }
 
         public static string HashPassword(string password)

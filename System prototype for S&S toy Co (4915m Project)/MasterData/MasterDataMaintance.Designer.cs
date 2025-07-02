@@ -1,6 +1,6 @@
-﻿namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
+﻿namespace System_prototype_for_S_S_toy_Co__4915m_Project_.MasterData
 {
-    partial class ViewRequirements
+    partial class MasterDataMaintance
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            dtRequirement = new DataGridView();
             panel2 = new Panel();
             btnFindByID = new Button();
             label1 = new Label();
@@ -41,33 +40,29 @@
             btnFilterAdd = new Button();
             txtFilter = new TextBox();
             label2 = new Label();
+            btnUpdate = new Button();
             btnReload = new Button();
-            ((System.ComponentModel.ISupportInitialize)dtRequirement).BeginInit();
+            dataGridView1 = new DataGridView();
+            sbTable = new ComboBox();
+            btnGet = new Button();
             panel2.SuspendLayout();
             panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
-            // 
-            // dtRequirement
-            // 
-            dtRequirement.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dtRequirement.Location = new Point(32, 250);
-            dtRequirement.Name = "dtRequirement";
-            dtRequirement.Size = new Size(525, 287);
-            dtRequirement.TabIndex = 0;
             // 
             // panel2
             // 
             panel2.Controls.Add(btnFindByID);
             panel2.Controls.Add(label1);
             panel2.Controls.Add(txtFindByID);
-            panel2.Location = new Point(51, 36);
+            panel2.Location = new Point(34, 33);
             panel2.Name = "panel2";
-            panel2.Size = new Size(295, 115);
-            panel2.TabIndex = 13;
+            panel2.Size = new Size(234, 100);
+            panel2.TabIndex = 16;
             // 
             // btnFindByID
             // 
-            btnFindByID.Location = new Point(117, 48);
+            btnFindByID.Location = new Point(136, 49);
             btnFindByID.Name = "btnFindByID";
             btnFindByID.Size = new Size(75, 23);
             btnFindByID.TabIndex = 4;
@@ -86,7 +81,7 @@
             // 
             // txtFindByID
             // 
-            txtFindByID.Location = new Point(12, 48);
+            txtFindByID.Location = new Point(14, 49);
             txtFindByID.Name = "txtFindByID";
             txtFindByID.Size = new Size(89, 23);
             txtFindByID.TabIndex = 5;
@@ -100,10 +95,10 @@
             panel1.Controls.Add(btnFilterAdd);
             panel1.Controls.Add(txtFilter);
             panel1.Controls.Add(label2);
-            panel1.Location = new Point(391, 36);
+            panel1.Location = new Point(374, 33);
             panel1.Name = "panel1";
             panel1.Size = new Size(387, 191);
-            panel1.TabIndex = 12;
+            panel1.TabIndex = 15;
             // 
             // btnRemoveFilter
             // 
@@ -167,39 +162,77 @@
             label2.TabIndex = 8;
             label2.Text = "Filter";
             // 
+            // btnUpdate
+            // 
+            btnUpdate.Location = new Point(170, 215);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new Size(75, 23);
+            btnUpdate.TabIndex = 14;
+            btnUpdate.Text = "Update";
+            btnUpdate.UseVisualStyleBackColor = true;
+            btnUpdate.Click += btnUpdate_Click;
+            // 
             // btnReload
             // 
-            btnReload.Location = new Point(65, 177);
+            btnReload.Location = new Point(48, 215);
             btnReload.Name = "btnReload";
             btnReload.Size = new Size(75, 23);
-            btnReload.TabIndex = 14;
+            btnReload.TabIndex = 13;
             btnReload.Text = "Reload";
             btnReload.UseVisualStyleBackColor = true;
             btnReload.Click += btnReload_Click;
             // 
-            // ViewRequirements
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Location = new Point(34, 279);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.Size = new Size(464, 211);
+            dataGridView1.TabIndex = 12;
+            // 
+            // sbTable
+            // 
+            sbTable.FormattingEnabled = true;
+            sbTable.Location = new Point(34, 174);
+            sbTable.Name = "sbTable";
+            sbTable.Size = new Size(121, 23);
+            sbTable.TabIndex = 17;
+            // 
+            // btnGet
+            // 
+            btnGet.Location = new Point(193, 173);
+            btnGet.Name = "btnGet";
+            btnGet.Size = new Size(75, 23);
+            btnGet.TabIndex = 18;
+            btnGet.Text = "Get";
+            btnGet.UseVisualStyleBackColor = true;
+            btnGet.Click += btnGet_Click;
+            // 
+            // MasterDataMaintance
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(843, 549);
-            Controls.Add(btnReload);
+            ClientSize = new Size(840, 535);
+            Controls.Add(btnGet);
+            Controls.Add(sbTable);
             Controls.Add(panel2);
             Controls.Add(panel1);
-            Controls.Add(dtRequirement);
-            Name = "ViewRequirements";
-            Text = "ViewRequirements";
-            Load += ViewRequirements_Load;
-            ((System.ComponentModel.ISupportInitialize)dtRequirement).EndInit();
+            Controls.Add(btnUpdate);
+            Controls.Add(btnReload);
+            Controls.Add(dataGridView1);
+            Name = "MasterDataMaintance";
+            Text = "MasterDataMaintance";
+            Load += MasterDataMaintance_Load;
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
 
-        private DataGridView dtRequirement;
         private Panel panel2;
         private Button btnFindByID;
         private Label label1;
@@ -212,6 +245,10 @@
         private Button btnFilterAdd;
         private TextBox txtFilter;
         private Label label2;
+        private Button btnUpdate;
         private Button btnReload;
+        private DataGridView dataGridView1;
+        private ComboBox sbTable;
+        private Button btnGet;
     }
 }
