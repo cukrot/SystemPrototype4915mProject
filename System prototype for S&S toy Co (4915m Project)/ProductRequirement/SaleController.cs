@@ -256,7 +256,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
             return saleID;
         }
 
-        internal async Task<int> AddProductToRequirement(string? productID, int quantity)
+        internal async Task<bool> AddProductToRequirement(string? productID, int quantity)
         {   // { "orderline", new string[] { "OrderID", "ProductID", "Qty" } }
             try {
             if (dtOrderLines == null)
@@ -285,12 +285,13 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
                 
                 // Accept changes to the DataTable
                 dtOrderLines.AcceptChanges();
+                return true; // Return true to indicate success 
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"Error adding product to requirement: {ex.Message}", ex);
             }
-
+            return false; // Return false if the operation fails
         }
     }
 }

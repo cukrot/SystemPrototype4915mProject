@@ -106,7 +106,8 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
         }
 
         private void btnRemoveProduct_Click(object sender, EventArgs e)
-        {
+        { 
+            //DataRow selectedRow = ((DataRowView)dtOrderline.SelectedRows[0].DataBoundItem).Row;
 
         }
 
