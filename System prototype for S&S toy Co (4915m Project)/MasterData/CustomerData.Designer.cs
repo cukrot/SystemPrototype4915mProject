@@ -35,7 +35,7 @@
             // dgCustomer
             // 
             dgCustomer.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgCustomer.Location = new Point(105, 93);
+            dgCustomer.Location = new Point(75, 152);
             dgCustomer.Name = "dgCustomer";
             dgCustomer.Size = new Size(456, 245);
             dgCustomer.TabIndex = 0;

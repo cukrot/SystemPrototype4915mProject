@@ -16,7 +16,7 @@ namespace DatabaseAccessController
         {
             //First sql: String sqlCmdForID = "SELECT EmployeeID FROM user WHERE UserName = '" + username + "' and Password = '" + password + "'";
             //Second sql: String sqlCmForInfo = "SELECT EmployeeID, Department, Position, Status FROM e,ployee WHERE EmployeeID = (above query result)";
-            String sqlCmdForID = $"SELECT EmployeeID, Department, Position, Status FROM employee WHERE UserName = '{username}' AND Password = '{password}'";
+            String sqlCmdForID = $"SELECT UserID, EmployeeID, Status FROM user WHERE UserName = '{username}' AND Password = '{password}'";
             // Note: In a real application, you should use parameterized queries to prevent SQL injection attacks.
             String sqlCmd = sqlCmdForID; // Assuming the first query returns all necessary fields
             DataTable dt = GetData(sqlCmd);
@@ -51,7 +51,7 @@ namespace DatabaseAccessController
                     // Return the employee information in a dictionary for root user
                     return new Dictionary<string, string>
                     {
-                        { "EmployeeID", "" }, // Assuming root user does not have a specific EmployeeID
+                        { "EmployeeID", "root" }, // Assuming root user does not have a specific EmployeeID
                         { "Department", "root" }, // Assuming root user has a special identifier
                         { "Position", "root" }, // Assuming root user has a special identifier
                         { "Status", "Active" }, // Assuming the root user is always active

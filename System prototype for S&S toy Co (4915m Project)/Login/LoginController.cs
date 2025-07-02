@@ -60,10 +60,9 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Login
                         else if (loginEmpInfo.isLoginSuccess == "true" && !string.IsNullOrEmpty(loginEmpInfo.EmployeeID))
                         {
                             // If login is successful and EmployeeID is found, set the system controller's employee info
-                            systemController.SetEmployeeInfo(loginEmpInfo);
 
                             // If login is successful, start the system controller
-                            systemController.login();
+                            systemController.login(loginEmpInfo);
                             // Hide the login page
                             loginPage.Hide();
 
@@ -110,8 +109,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Login
                 Status = "Active",
                 isLoginSuccess = "true"
             };
-            systemController.SetEmployeeInfo(testEmpInfo); // Set test employee info
-            systemController.login();
+            systemController.login(testEmpInfo);
             loginPage.Hide(); // Hide the login page
             return true;
         }

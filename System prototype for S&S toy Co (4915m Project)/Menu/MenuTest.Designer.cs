@@ -30,15 +30,19 @@
         {
             btnSub2 = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
-            btnMasterData = new Button();
-            btnPRequirement = new Button();
-            btnInv = new Button();
-            btnDelivery = new Button();
+            btnSubMenu1 = new Button();
+            btnSubMenu2 = new Button();
+            btnSubMenu3 = new Button();
+            btnSubMenu4 = new Button();
+            btnSubMenu5 = new Button();
+            btnSubMenu6 = new Button();
+            btnSubMenu7 = new Button();
+            btnSubMenu8 = new Button();
+            btnSubMenu9 = new Button();
             flowLayoutPanel2 = new FlowLayoutPanel();
             btnSub1 = new Button();
             btnSub3 = new Button();
             btnSub4 = new Button();
-            btnTestMenu = new Button();
             flowLayoutPanel1.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             SuspendLayout();
@@ -56,55 +60,118 @@
             // 
             // flowLayoutPanel1
             // 
-            flowLayoutPanel1.Controls.Add(btnMasterData);
-            flowLayoutPanel1.Controls.Add(btnPRequirement);
-            flowLayoutPanel1.Controls.Add(btnInv);
-            flowLayoutPanel1.Controls.Add(btnDelivery);
-            flowLayoutPanel1.Controls.Add(btnTestMenu);
+            flowLayoutPanel1.Controls.Add(btnSubMenu1);
+            flowLayoutPanel1.Controls.Add(btnSubMenu2);
+            flowLayoutPanel1.Controls.Add(btnSubMenu3);
+            flowLayoutPanel1.Controls.Add(btnSubMenu4);
+            flowLayoutPanel1.Controls.Add(btnSubMenu5);
+            flowLayoutPanel1.Controls.Add(btnSubMenu6);
+            flowLayoutPanel1.Controls.Add(btnSubMenu7);
+            flowLayoutPanel1.Controls.Add(btnSubMenu8);
+            flowLayoutPanel1.Controls.Add(btnSubMenu9);
             flowLayoutPanel1.Location = new Point(29, 100);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(178, 338);
+            flowLayoutPanel1.Size = new Size(263, 440);
             flowLayoutPanel1.TabIndex = 2;
             // 
-            // btnMasterData
+            // btnSubMenu1
             // 
-            btnMasterData.Location = new Point(3, 3);
-            btnMasterData.Name = "btnMasterData";
-            btnMasterData.Size = new Size(75, 75);
-            btnMasterData.TabIndex = 0;
-            btnMasterData.Text = "MasterData";
-            btnMasterData.UseVisualStyleBackColor = true;
-            btnMasterData.Click += btnMasterData_Click;
+            btnSubMenu1.Location = new Point(5, 5);
+            btnSubMenu1.Margin = new Padding(5);
+            btnSubMenu1.Name = "btnSubMenu1";
+            btnSubMenu1.Size = new Size(100, 75);
+            btnSubMenu1.TabIndex = 4;
+            btnSubMenu1.Text = "btnSubMenu";
+            btnSubMenu1.UseVisualStyleBackColor = true;
+            btnSubMenu1.Click += btnSubMenu1_Click;
             // 
-            // btnPRequirement
+            // btnSubMenu2
             // 
-            btnPRequirement.Location = new Point(84, 3);
-            btnPRequirement.Name = "btnPRequirement";
-            btnPRequirement.Size = new Size(75, 75);
-            btnPRequirement.TabIndex = 1;
-            btnPRequirement.Text = "Product Requirement";
-            btnPRequirement.UseVisualStyleBackColor = true;
-            btnPRequirement.Click += btnPRequirement_Click;
+            btnSubMenu2.Location = new Point(115, 5);
+            btnSubMenu2.Margin = new Padding(5);
+            btnSubMenu2.Name = "btnSubMenu2";
+            btnSubMenu2.Size = new Size(100, 75);
+            btnSubMenu2.TabIndex = 5;
+            btnSubMenu2.Text = "btnSubMenu";
+            btnSubMenu2.UseVisualStyleBackColor = true;
+            btnSubMenu2.Click += btnSubMenu2_Click;
             // 
-            // btnInv
+            // btnSubMenu3
             // 
-            btnInv.Location = new Point(3, 84);
-            btnInv.Name = "btnInv";
-            btnInv.Size = new Size(75, 75);
-            btnInv.TabIndex = 2;
-            btnInv.Text = "Inventory";
-            btnInv.UseVisualStyleBackColor = true;
-            btnInv.Click += btnInv_Click;
+            btnSubMenu3.Location = new Point(5, 90);
+            btnSubMenu3.Margin = new Padding(5);
+            btnSubMenu3.Name = "btnSubMenu3";
+            btnSubMenu3.Size = new Size(100, 75);
+            btnSubMenu3.TabIndex = 6;
+            btnSubMenu3.Text = "btnSubMenu";
+            btnSubMenu3.UseVisualStyleBackColor = true;
+            btnSubMenu3.Click += btnSubMenu3_Click;
             // 
-            // btnDelivery
+            // btnSubMenu4
             // 
-            btnDelivery.Location = new Point(84, 84);
-            btnDelivery.Name = "btnDelivery";
-            btnDelivery.Size = new Size(75, 75);
-            btnDelivery.TabIndex = 3;
-            btnDelivery.Text = "Delivery";
-            btnDelivery.UseVisualStyleBackColor = true;
-            btnDelivery.Click += btnDelivery_Click;
+            btnSubMenu4.Location = new Point(115, 90);
+            btnSubMenu4.Margin = new Padding(5);
+            btnSubMenu4.Name = "btnSubMenu4";
+            btnSubMenu4.Size = new Size(100, 75);
+            btnSubMenu4.TabIndex = 7;
+            btnSubMenu4.Text = "btnSubMenu";
+            btnSubMenu4.UseVisualStyleBackColor = true;
+            btnSubMenu4.Click += btnSubMenu4_Click;
+            // 
+            // btnSubMenu5
+            // 
+            btnSubMenu5.Location = new Point(5, 175);
+            btnSubMenu5.Margin = new Padding(5);
+            btnSubMenu5.Name = "btnSubMenu5";
+            btnSubMenu5.Size = new Size(100, 75);
+            btnSubMenu5.TabIndex = 8;
+            btnSubMenu5.Text = "btnSubMenu";
+            btnSubMenu5.UseVisualStyleBackColor = true;
+            btnSubMenu5.Click += btnSubMenu5_Click;
+            // 
+            // btnSubMenu6
+            // 
+            btnSubMenu6.Location = new Point(115, 175);
+            btnSubMenu6.Margin = new Padding(5);
+            btnSubMenu6.Name = "btnSubMenu6";
+            btnSubMenu6.Size = new Size(100, 75);
+            btnSubMenu6.TabIndex = 9;
+            btnSubMenu6.Text = "btnSubMenu";
+            btnSubMenu6.UseVisualStyleBackColor = true;
+            btnSubMenu6.Click += btnSubMenu6_Click;
+            // 
+            // btnSubMenu7
+            // 
+            btnSubMenu7.Location = new Point(5, 260);
+            btnSubMenu7.Margin = new Padding(5);
+            btnSubMenu7.Name = "btnSubMenu7";
+            btnSubMenu7.Size = new Size(100, 75);
+            btnSubMenu7.TabIndex = 10;
+            btnSubMenu7.Text = "btnSubMenu";
+            btnSubMenu7.UseVisualStyleBackColor = true;
+            btnSubMenu7.Click += btnSubMenu7_Click;
+            // 
+            // btnSubMenu8
+            // 
+            btnSubMenu8.Location = new Point(115, 260);
+            btnSubMenu8.Margin = new Padding(5);
+            btnSubMenu8.Name = "btnSubMenu8";
+            btnSubMenu8.Size = new Size(100, 75);
+            btnSubMenu8.TabIndex = 11;
+            btnSubMenu8.Text = "btnSubMenu";
+            btnSubMenu8.UseVisualStyleBackColor = true;
+            btnSubMenu8.Click += btnSubMenu8_Click;
+            // 
+            // btnSubMenu9
+            // 
+            btnSubMenu9.Location = new Point(5, 345);
+            btnSubMenu9.Margin = new Padding(5);
+            btnSubMenu9.Name = "btnSubMenu9";
+            btnSubMenu9.Size = new Size(100, 75);
+            btnSubMenu9.TabIndex = 12;
+            btnSubMenu9.Text = "btnSubMenu";
+            btnSubMenu9.UseVisualStyleBackColor = true;
+            btnSubMenu9.Click += btnSubMenu9_Click;
             // 
             // flowLayoutPanel2
             // 
@@ -112,7 +179,7 @@
             flowLayoutPanel2.Controls.Add(btnSub2);
             flowLayoutPanel2.Controls.Add(btnSub3);
             flowLayoutPanel2.Controls.Add(btnSub4);
-            flowLayoutPanel2.Location = new Point(278, 100);
+            flowLayoutPanel2.Location = new Point(354, 100);
             flowLayoutPanel2.Margin = new Padding(5);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
             flowLayoutPanel2.Size = new Size(337, 241);
@@ -149,21 +216,11 @@
             btnSub4.Text = "button11";
             btnSub4.UseVisualStyleBackColor = true;
             // 
-            // btnTestMenu
-            // 
-            btnTestMenu.Location = new Point(3, 165);
-            btnTestMenu.Name = "btnTestMenu";
-            btnTestMenu.Size = new Size(75, 75);
-            btnTestMenu.TabIndex = 4;
-            btnTestMenu.Text = "Test menu";
-            btnTestMenu.UseVisualStyleBackColor = true;
-            btnTestMenu.Click += btnTestMenu_Click;
-            // 
             // MenuTest
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(800, 552);
             Controls.Add(flowLayoutPanel2);
             Controls.Add(flowLayoutPanel1);
             Name = "MenuTest";
@@ -177,14 +234,18 @@
         #endregion
         private Button btnSub2;
         private FlowLayoutPanel flowLayoutPanel1;
-        private Button btnMasterData;
-        private Button btnPRequirement;
-        private Button btnInv;
-        private Button btnDelivery;
         private FlowLayoutPanel flowLayoutPanel2;
         private Button btnSub1;
         private Button btnSub3;
         private Button btnSub4;
-        private Button btnTestMenu;
+        private Button btnSubMenu1;
+        private Button btnSubMenu2;
+        private Button btnSubMenu3;
+        private Button btnSubMenu4;
+        private Button btnSubMenu5;
+        private Button btnSubMenu6;
+        private Button btnSubMenu7;
+        private Button btnSubMenu8;
+        private Button btnSubMenu9;
     }
 }

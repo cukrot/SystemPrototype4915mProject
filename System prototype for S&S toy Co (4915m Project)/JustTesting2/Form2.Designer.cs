@@ -31,7 +31,7 @@
             dataGridView1 = new DataGridView();
             btnReload = new Button();
             label1 = new Label();
-            button2 = new Button();
+            btnUpdate = new Button();
             btnFindByID = new Button();
             txtFindByID = new TextBox();
             txtFilter = new TextBox();
@@ -75,15 +75,15 @@
             label1.TabIndex = 2;
             label1.Text = "Find by ID";
             // 
-            // button2
+            // btnUpdate
             // 
-            button2.Location = new Point(620, 378);
-            button2.Name = "button2";
-            button2.Size = new Size(75, 23);
-            button2.TabIndex = 3;
-            button2.Text = "Update";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
+            btnUpdate.Location = new Point(620, 378);
+            btnUpdate.Name = "btnUpdate";
+            btnUpdate.Size = new Size(75, 23);
+            btnUpdate.TabIndex = 3;
+            btnUpdate.Text = "Update";
+            btnUpdate.UseVisualStyleBackColor = true;
+            btnUpdate.Click += button2_Click;
             // 
             // btnFindByID
             // 
@@ -195,7 +195,7 @@
             ClientSize = new Size(819, 518);
             Controls.Add(panel2);
             Controls.Add(panel1);
-            Controls.Add(button2);
+            Controls.Add(btnUpdate);
             Controls.Add(btnReload);
             Controls.Add(dataGridView1);
             Name = "Form2";
@@ -214,7 +214,7 @@
         private DataGridView dataGridView1;
         private Button btnReload;
         private Label label1;
-        private Button button2;
+        private Button btnUpdate;
         private Button btnFindByID;
         private TextBox txtFindByID;
         private TextBox txtFilter;

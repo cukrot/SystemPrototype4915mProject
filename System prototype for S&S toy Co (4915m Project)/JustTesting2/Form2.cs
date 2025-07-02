@@ -31,8 +31,9 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
         {
             try
             {
-                DataTable dt = await controll.GetCustomerData();
+                DataTable dt = await controll.GetUserData(); // Assuming GetUserData() is a method in TestControll2 that fetches user data
                 dataGridView1.DataSource = dt;
+                dt.AcceptChanges();
                 sbFilter.Items.Clear();
                 sbSelFilter.Items.Clear();
                 foreach (DataColumn column in dt.Columns)
@@ -110,7 +111,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2
 
             if (dtUpdated != null)
             {
-                int rowsUpdated = await controll.UpdateCustomerDataToAPI(dtUpdated);
+                int rowsUpdated = await controll.UpdateUserDataToAPI(dtUpdated);
                 if (rowsUpdated > 0)
                 {
                     dtUpdated.AcceptChanges();

@@ -42,7 +42,7 @@
             // 
             // lbColumns
             // 
-            lbColumns.Location = new Point(448, 81);
+            lbColumns.Location = new Point(325, 74);
             lbColumns.Name = "lbColumns";
             lbColumns.Size = new Size(310, 214);
             lbColumns.TabIndex = 0;
@@ -51,7 +51,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(203, 91);
+            label2.Location = new Point(80, 84);
             label2.Name = "label2";
             label2.Size = new Size(42, 15);
             label2.TabIndex = 2;
@@ -60,7 +60,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(203, 131);
+            label3.Location = new Point(80, 124);
             label3.Name = "label3";
             label3.Size = new Size(71, 15);
             label3.TabIndex = 3;
@@ -69,7 +69,7 @@
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(203, 171);
+            label4.Location = new Point(80, 164);
             label4.Name = "label4";
             label4.Size = new Size(52, 15);
             label4.TabIndex = 4;
@@ -78,7 +78,7 @@
             // label5
             // 
             label5.AutoSize = true;
-            label5.Location = new Point(203, 211);
+            label5.Location = new Point(80, 204);
             label5.Name = "label5";
             label5.Size = new Size(38, 15);
             label5.TabIndex = 5;
@@ -86,35 +86,35 @@
             // 
             // txtName
             // 
-            txtName.Location = new Point(286, 88);
+            txtName.Location = new Point(163, 81);
             txtName.Name = "txtName";
             txtName.Size = new Size(100, 23);
             txtName.TabIndex = 7;
             // 
             // txtPhoneNum
             // 
-            txtPhoneNum.Location = new Point(286, 128);
+            txtPhoneNum.Location = new Point(163, 121);
             txtPhoneNum.Name = "txtPhoneNum";
             txtPhoneNum.Size = new Size(100, 23);
             txtPhoneNum.TabIndex = 8;
             // 
             // txtAddress
             // 
-            txtAddress.Location = new Point(286, 168);
+            txtAddress.Location = new Point(163, 161);
             txtAddress.Name = "txtAddress";
             txtAddress.Size = new Size(100, 23);
             txtAddress.TabIndex = 9;
             // 
             // txtEmail
             // 
-            txtEmail.Location = new Point(286, 208);
+            txtEmail.Location = new Point(163, 201);
             txtEmail.Name = "txtEmail";
             txtEmail.Size = new Size(100, 23);
             txtEmail.TabIndex = 10;
             // 
             // btnSubmit
             // 
-            btnSubmit.Location = new Point(286, 272);
+            btnSubmit.Location = new Point(163, 265);
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(75, 23);
             btnSubmit.TabIndex = 11;
