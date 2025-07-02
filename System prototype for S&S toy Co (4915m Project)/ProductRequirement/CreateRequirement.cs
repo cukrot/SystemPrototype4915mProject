@@ -79,20 +79,26 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
         private void CreateRequirement_Load(object sender, EventArgs e)
         {
             string saleID = control.GetSaleID();
+            DateTime date = DateTime.Today;
         }
 
         private async void btnAddProduct_Click(object sender, EventArgs e) //Add product to the requirement
         {
+            if (string.IsNullOrEmpty(txtQuantity.Text) || !int.TryParse(txtQuantity.Text, out int quantity) || quantity <= 0)
+            {
+                MessageBox.Show("Please enter a valid quantity.");
+                return;
+            }
             if (dtProductInfo.SelectedRows.Count > 0)
             {
-                DataRow selectedRow = ((DataRowView)dtProductInfo.SelectedRows[0].DataBoundItem).Row;
-                string productID = selectedRow["ProductID"].ToString();
+                string productID = txtProductID.Text.Trim();
 
                 // Assuming control has a method to add product to the requirement
                 bool isAdded = false;
                 try
-                {   //affectedRows = await control.AddProductToRequirement(productID, quantity);
-                    dtProductInfo.DataSource = null; // Clear the DataGridView after adding
+                {
+                    await control.AddProductToRequirement(productID, quantity);
+
                 }
                 catch (Exception ex)
                 {
@@ -106,13 +112,23 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
         }
 
         private void btnRemoveProduct_Click(object sender, EventArgs e)
-        { 
+        {
             //DataRow selectedRow = ((DataRowView)dtOrderline.SelectedRows[0].DataBoundItem).Row;
 
         }
 
         private void btnSubmit_Click(object sender, EventArgs e) //Insert the requirement into the database
         {
+        }
+
+        private void dtProductInfo_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dtProductInfo.DataSource != null && dtProductInfo.SelectedRows.Count > 0)
+            {
+                DataRow selectedRow = ((DataRowView)dtProductInfo.SelectedRows[0].DataBoundItem).Row;
+                txtProductID.Text = selectedRow["ProductID"].ToString();
+                txtProductName.Text = selectedRow["ProductName"].ToString();
+            }
         }
     }
 }

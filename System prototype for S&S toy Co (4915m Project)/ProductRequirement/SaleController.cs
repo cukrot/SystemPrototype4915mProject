@@ -256,23 +256,26 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
             return saleID;
         }
 
-        internal async Task<bool> AddProductToRequirement(string? productID, int quantity)
+        internal async Task<DataTable> AddProductToRequirement(string? productID, int quantity)
         {   // { "orderline", new string[] { "OrderID", "ProductID", "Qty" } }
             try {
             if (dtOrderLines == null)
             {
                 dtOrderLines = await GetEmptyTable("orderline"); // specify table name
             }
-            if (string.IsNullOrEmpty(productID) || quantity <= 0)
-            {
-                throw new ArgumentException("Product ID cannot be null or empty and quantity must be greater than zero.");
-            }
-          
+                if (string.IsNullOrEmpty(productID) || quantity <= 0)
+                {
+                    throw new ArgumentException("Product ID cannot be null or empty and quantity must be greater than zero.");
+                }
             
                 if (dtOrderLines == null)
                 {
                     DataTable dt = await GetTableData("orderline"); // specify table name
                     dtOrderLines = dt.Copy();
+                }
+                foreach (DataColumn col in dtOrderLines.Columns)
+                {
+                    col.ReadOnly = false; // Set all columns to ReadOnly
                 }
                 // Create a new DataRow for the order line
                 DataRow newRow = dtOrderLines.NewRow();
@@ -285,13 +288,16 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
                 
                 // Accept changes to the DataTable
                 dtOrderLines.AcceptChanges();
-                return true; // Return true to indicate success 
+                foreach (DataColumn col in dtOrderLines.Columns)
+                {
+                    col.ReadOnly = true; // Set all columns back to ReadOnly after adding the new row
+                }
+                return dtOrderLines.Copy(); // Return the updated DataTable with the new order line
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"Error adding product to requirement: {ex.Message}", ex);
             }
-            return false; // Return false if the operation fails
         }
     }
 }
