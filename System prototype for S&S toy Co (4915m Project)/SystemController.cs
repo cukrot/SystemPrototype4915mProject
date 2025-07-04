@@ -48,7 +48,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
             SetEmployeeInfo(empInfo);
             empID = empInfo.EmployeeID;
             userAccessController = new UserAccessController();
-            accessControlOfSubsytem = userAccessController.GetAccessControl(this.empInfo.Department);
+            accessControlOfSubsytem = userAccessController.GetAccessControl(this.empInfo.Department, empInfo.Position);
             AccessPermission accessPermission = new AccessPermission();
             subSystemPages = accessPermission.SubSystemPages; // Get the pages for the subsystems based on access control
             menuController = new MenuController(this, accessControlOfSubsytem, subSystemPages);
@@ -94,10 +94,37 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
                     supplyChainController.OpenPage(pageIndex);
                     break;
                 case "MasterData Management":
+
                     if (invController == null)
                     {
                         invController = new InvController(getIsStaff());
                     }
+                    switch (pageIndex)
+                    {
+                        case 0: // Master Data
+                            if (masterDataController == null)
+                            {
+                                masterDataController = new MasterDataController();
+                            }
+                            masterDataController.OpenPage(pageIndex);
+                            break;
+                    }
+                    break;
+                case "Administraction Management":
+                    switch (pageIndex)
+                    {
+
+                        case 0: // Admin Page
+                            if (adminController == null)
+                            {
+                                AdminController adminController = new AdminController();
+                            }
+                            AdminController.OpenPage("AdminPage");
+                            break;
+
+                    }
+                    break;
+                case "Inventory Management":
                     switch (pageIndex)
                     {
                         case 0: // View Products
@@ -110,55 +137,8 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
                             break;
                     }
                     break;
-                case "Administraction Management":
-                    switch (pageIndex)
-                    {
-                        case 0: // Master Data
-                            if (masterDataController == null)
-                            {
-                                masterDataController = new MasterDataController();
-                            }
-                            masterDataController.OpenPage(pageIndex);
-                            break;
-                        case 1: // Admin Page
-                            if (adminController == null)
-                            {
-                                AdminController adminController = new AdminController();
-                            }
-                            AdminController.OpenPage("AdminPage");
-                            break;
-                        case 2: // Material Procurement
-                            MaterialProcurementListForm materialProcurementForm = new MaterialProcurementListForm();
-                            materialProcurementForm.Show();
-                            break;
-                    }
-                    break;
-                case "Inventory Management":
-                    switch (pageIndex)
-                    {
-                        case 0: // Product Log Form
-                            ProductLogForm productLogForm = new ProductLogForm();
-                            productLogForm.Show();
-                            break;
-                        case 1: // Material Log Form
-                            MaterialLogForm materialLogForm = new MaterialLogForm();
-                            materialLogForm.Show();
-                            break;
-                        case 2: // Edit Product
-                            EditProductForm editProductForm = new EditProductForm();
-                            editProductForm.Show();
-                            break;
-                        case 3: // Edit Material
-                            MaterialEditForm editMaterialForm = new MaterialEditForm();
-                            editMaterialForm.Show();
-                            break;
-                    }
-
-                    break;
                 default: 
                     throw new ArgumentException($"Subsystem '{menuCurrent}' is not recognized or not implemented.");
-
-
             }
         }
 

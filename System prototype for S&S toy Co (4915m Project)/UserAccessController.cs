@@ -28,9 +28,12 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
         {
             return menuOfSubsystem;
         }
-        public string[] GetAccessControl(string department)
+        public string[] GetAccessControl(string department, string role)
         {
-            if (accessControl.ContainsKey(department))
+            if (role == "root" || role == "Administrator") // Root or Admin has access to all subsystems
+            {
+                return accessControl[role];
+            } else if (accessControl.ContainsKey(department))
             {
                 return accessControl[department];
             }

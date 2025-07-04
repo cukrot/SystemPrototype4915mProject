@@ -73,7 +73,7 @@
             btnSumbit.Name = "btnSumbit";
             btnSumbit.Size = new Size(75, 23);
             btnSumbit.TabIndex = 4;
-            btnSumbit.Text = "button1";
+            btnSumbit.Text = "Set";
             btnSumbit.UseVisualStyleBackColor = true;
             btnSumbit.Click += btnSumbit_Click;
             // 

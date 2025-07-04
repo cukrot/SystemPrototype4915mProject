@@ -28,7 +28,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.SuppyChain
         {
             try
             {
-                DataTable dt = await getPurchases();
+                DataTable dt = await control.GetPurchaseOrders();
                 dtPurchase.DataSource = dt;
                 dt.AcceptChanges();
             }

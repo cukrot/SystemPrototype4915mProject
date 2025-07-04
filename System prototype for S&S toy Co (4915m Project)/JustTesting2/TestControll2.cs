@@ -45,11 +45,11 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
             {
                 case 0: // Form2
                     Form2 form2 = new Form2(this);
-                    form2.ShowDialog();
+                    form2.Show();
                     break;
                 case 1:
                     Test_Insert formInsert = new Test_Insert(this);
-                    formInsert.ShowDialog();
+                    formInsert.Show();
                     break;
             }
         }

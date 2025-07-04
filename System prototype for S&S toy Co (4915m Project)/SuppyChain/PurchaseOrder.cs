@@ -176,8 +176,14 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.SuppyChain
 
             // Get the selected warehouse ID from the combobox
             string selectedWarehouse = cbWarehouse.SelectedItem.ToString();
-            string warehouseID = dtwh.AsEnumerable()
-                .FirstOrDefault(row => row.Field<string>("Name") == selectedWarehouse)?["WarehouseID"].ToString();
+            DataView dv = dtwh.Copy().DefaultView;
+            dv.RowFilter = $"Name = '{selectedWarehouse}'";
+            if (dv.Count == 0)
+            {
+                MessageBox.Show("Selected warehouse not found.");
+                return;
+            }
+            string warehouseID = dv.ToTable().Rows[0]["WarehouseID"].ToString();
             bool isInserted = false;
             try
             {

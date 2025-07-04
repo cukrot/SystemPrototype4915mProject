@@ -115,10 +115,12 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.MasterData
                 if (dtUser == null || dtUser.Rows.Count == 0)
                 {
                     txtMessage.Text += "\nNo user account found for this employee. You can create a new user account.";
+                    btnUser.Text = "Create User Account"; // Change button text to indicate creation action
                 }
                 else
                 {
                     txtMessage.Text += "\nUser account found. You can modify the employee and user information.";
+                    btnUser.Text = "Reset User Name and Password"; // Change button text to indicate reset action
                 }
                 populateEmployeeInfoBoxes();
             }

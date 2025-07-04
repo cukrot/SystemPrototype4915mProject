@@ -1,4 +1,6 @@
 ﻿using EntityModels;
+using Google.Protobuf.WellKnownTypes;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -47,11 +49,6 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
         public async Task<DataTable> GetProductRequirements()
         {
             DataTable dt = null;
-            if (dtProductRequirements_view != null)
-            {
-                dt = dtProductRequirements_view.Copy();
-                return dt;
-            }
             try
             {
                 dt = await GetTableData("order"); // specify table name
@@ -86,23 +83,30 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
             return rowsUpdated;
         }
 
-        internal void AddCustomerFilter_view(string? filterColumn, string filterValue)
+        internal string AddCustomerFilter_view(string filterColumn, string filterValue, string filterExpression)
         {
-            throw new NotImplementedException();
+            filterExpression = AddFilterItem(filterColumn, filterValue, dtProductRequirements_view.Copy() , filterExpression);
+            return filterExpression;
         }
 
-        internal DataTable FindOrderByCustomerID_view(string id)
+        internal DataTable FindOrderByCustomerID_view(string id, string filterExpression)
         {
-            throw new NotImplementedException();
+            {
+                if (string.IsNullOrWhiteSpace(id) || dtProductRequirements_view == null)
+                    return null;
+                return FindRowsByID(id, dtProductRequirements_view.Copy(), filterExpression);
+            }
         }
 
-        internal object GetFilteredOrderData_view()
+        internal object GetFilteredOrderData_view(string filterExpression)
         {
-            throw new NotImplementedException();
+            if (dtProductRequirements_view == null) return null;
+            return GetFilteredTable(dtProductRequirements_view.Copy(), filterExpression);
         }
-        internal void RemoveOrderFilter_view(string v1, string v2)
+        internal string RemoveOrderFilter_view(string v1, string v2, string filterExpression)
         {
-            throw new NotImplementedException();
+            filterExpression = RemoveFilterItem(v1, v2, dtProductRequirements_view.Copy(), filterExpression);
+            return filterExpression;
         }
 
 

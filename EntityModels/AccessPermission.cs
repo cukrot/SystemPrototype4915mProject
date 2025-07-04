@@ -11,12 +11,12 @@ namespace EntityModels
         private string[] departments = new string[]
 {
             "R & D Department", // Not used in this prototype
-            "Sale Management",
+            "Sale Department",
             "Marketing Department",
             "Sale & Marketing Department",
             "Production Department",
-            "Supply Chain Management",
-            "Inventory Management",
+            "Supply Chain Department",
+            "Inventory Department",
             "Customer Service Department",
             "Finance Department", //Not used in this prototype
             "IT Department",
@@ -30,11 +30,9 @@ namespace EntityModels
         {
             "MasterData Management", //IT
             "Product Requirements", //sale, marketing, sale & marketing
-            //"Production Processing Management", //Production
             "Supply Chain Management", //Supply Chain Management
             "Inventory Management", //Inventory Management, Supply Chain Management
             "Administraction Management", //Supply Chain Management
-            "Inventory Management", //Customer Service Department
             "Customer", //sale
         };
         public string[] MenuOfSubsystem
@@ -46,13 +44,11 @@ namespace EntityModels
             { "Product Requirements", new string[] { "View Product Requirements", "Edit Product Requirements", "Create Product Requirements" } },
             { "Customer" , new string[] { "View Customer Data", "Insert Customer Data"} },
             { "Inventory Management", new string[] { 
-                "Product Log Form", "MaterialLogForm" ,
-                "View Product", "Edit Material", 
                 "View Product Inventory", "View Material Inventory"
             } },
             { "Supply Chain Management", new string[] { "View Purchase Order", "View Masterial Suppliers", "Add Purchase Order" ,"Confirm Inward", "View Inward Record" } },
-            { "Administraction Management", new string[] { "MasterData", "Admin Page", "MAterial Procurement"} },
-            { "MasterData Management", new string[] { "View Products", "View Material" } }
+            { "Administraction Management", new string[] { "Admin Page"} },
+            { "MasterData Management", new string[] { "MasterData"} }
 
         };
         public Dictionary<string, string[]> SubSystemPages
@@ -62,13 +58,13 @@ namespace EntityModels
         private Dictionary<string, string[]> accessControl = new Dictionary<string, string[]>
         {
             { "R & D Department", new string[] {} }, // No access to any subsystem in this prototype
-            { "Sale Management", new string[] { "Product Requirements"} },
-            { "Marketing Department", new string[] { "Product Requirements" }  },
-            { "Sale & Marketing Department", new string[] { "Product Requirements"} },
-            { "Production Department", new string[] { "Production Processing Management"} },
-            { "Supply Chain Management", new string[] { "Material Procurement", "Inventory Management", "Supply Chain Management" } },
-            { "Inventory Management", new string[] { "Inventory Management" }  },
-            { "Customer Service Department", new string[] { "After Service Management"} },
+            { "Sale Department", new string[] { "Product Requirements", "Customer" } },
+            { "Marketing Department", new string[] { "Product Requirements", "Customer" }  },
+            { "Sale & Marketing Department", new string[] { "Product Requirements", "Customer" } },
+            //{ "Production Department", new string[] { "Production Processing Management"} },
+            { "Supply Chain Department", new string[] { "Inventory Management", "Supply Chain Management" } },
+            { "Inventory Department", new string[] { "Inventory Management", "Supply Chain Management" }  },
+            //{ "Customer Service Department", new string[] { "After Service Management"} },
             { "Finance Department", new string[] { } }, // No access to any subsystem in this prototype
             { "IT Department", new string[] { "Administraction Management", "MasterData Management"} },
         };
@@ -76,7 +72,7 @@ namespace EntityModels
         {
             get
             { // add access control for root user and Administrator
-                var rootAccessControl = new Dictionary<string, string[]>(accessControl);
+                Dictionary<string, string[]> rootAccessControl = new Dictionary<string, string[]>(accessControl);
                 rootAccessControl.Add("root", menuOfSubsystem);
                 rootAccessControl.Add("Administrator", menuOfSubsystem);
                 return rootAccessControl;

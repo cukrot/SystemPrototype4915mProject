@@ -30,7 +30,6 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Inventory
             controll = new InventoryController();
             try
             {
-                cbWh.Items.Clear();
                 productTable = await controll.GetProductWithInventoryData();
                 
                 dtProduct.DataSource = productTable;

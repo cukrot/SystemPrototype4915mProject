@@ -55,7 +55,13 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
                 DataTable dt = await control.GetProductRequirements(); // Assuming GetProductRequirements() is a method in RequirementController that fetches product requirements
                 dtRequirement.DataSource = dt;
                 dt.AcceptChanges();
-                sbFilter.Items.Clear();
+                clearFilterExpression();
+                foreach (DataColumn column in dt.Columns)
+                {
+                    sbFilter.Items.Add(column.ColumnName);
+                }
+                txtFilter.Visible = false;
+                btnFilterAdd.Visible = false;
             }
             catch (Exception ex)
             {
@@ -96,6 +102,8 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
         private void UpdateFilterUI()
         {
             sbSelFilter.Items.Clear();
+            foreach (var filter in control.FilterList)
+                sbSelFilter.Items.Add(filter);
             sbSelFilter.Text = string.Empty;
         }
         private void sbFilter_SelectedIndexChanged(object sender, EventArgs e)
@@ -120,7 +128,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
                 MessageBox.Show("Please enter a Customer ID to search.");
                 return;
             }
-            DataTable result = control.FindOrderByCustomerID_view(id);
+            DataTable result = control.FindOrderByCustomerID_view(id, filterExpression);
 
             if (result != null && result.Rows.Count > 0)
             {
@@ -138,8 +146,8 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
             {
                 string filterColumn = sbFilter.SelectedItem.ToString();
                 string filterValue = txtFilter.Text;
-                control.AddCustomerFilter_view(filterColumn, filterValue);
-                dtRequirement.DataSource = control.GetFilteredOrderData_view();
+                filterExpression = control.AddCustomerFilter_view(filterColumn, filterValue, filterExpression);
+                dtRequirement.DataSource = control.GetFilteredOrderData_view(filterExpression);
                 UpdateFilterUI();
             }
             else
@@ -156,8 +164,8 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
                 var parts = selectedFilter.Split(':');
                 if (parts.Length == 2)
                 {
-                    control.RemoveOrderFilter_view(parts[0].Trim(), parts[1].Trim());
-                    dtRequirement.DataSource = control.GetFilteredOrderData_view();
+                    filterExpression = control.RemoveOrderFilter_view(parts[0].Trim(), parts[1].Trim(), filterExpression);
+                    dtRequirement.DataSource = control.GetFilteredOrderData_view(filterExpression);
                     UpdateFilterUI();
                 }
             }

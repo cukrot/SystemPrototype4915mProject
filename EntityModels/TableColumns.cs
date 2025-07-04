@@ -362,10 +362,25 @@ namespace EntityModels
         }
         public static readonly string[] tableNames = new string[]
         {
-            "customer", "delivery", "employee", "file", "ingredient", "material",
-            "meeting", "meetingparticipant", "order", "orderline", "payment",
-            "product", "productinventory", "productorder", "purchase",
-            "purchaseline", "supplier", "warehouse"
+            "customer",
+              "employee",
+              "inventory_log",
+              "inwardrecord",
+              "material",
+              "materialinventory",
+              "order",
+              "orderline",
+              "procurementdetail",
+              "procurementheader",
+              "product",
+              "productinventory",
+              "productororder",
+              "purchase",
+              "purchaseline",
+              "supplier",
+              "supplier material",
+              "user",
+              "warehouse"
         };
     }
 }

@@ -29,7 +29,7 @@ namespace WebAPI.Controllers
                 EmpInfo empInfo = new EmpInfo();
                 empInfo.EmployeeID = loginEmp.ContainsKey("EmployeeID") ? loginEmp["EmployeeID"] : string.Empty;
                 empInfo.Department = loginEmp.ContainsKey("Department") ? loginEmp["Department"] : string.Empty;
-                empInfo.Position = loginEmp.ContainsKey("Position") ? loginEmp["Position"] : string.Empty;
+                empInfo.Position = loginEmp.ContainsKey("Role") ? loginEmp["Role"] : string.Empty;
                 empInfo.Status = loginEmp.ContainsKey("Status") ? loginEmp["Status"] : string.Empty;
                 empInfo.isLoginSuccess = loginEmp.ContainsKey("isLoginSuccess") ? loginEmp["isLoginSuccess"] : "false";
                 string jasonString = JsonConvert.SerializeObject(empInfo);

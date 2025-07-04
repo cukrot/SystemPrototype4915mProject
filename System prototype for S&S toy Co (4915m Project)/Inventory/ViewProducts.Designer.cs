@@ -38,7 +38,6 @@
             btnStockIn = new Button();
             numStockQty = new NumericUpDown();
             btnRecord = new Button();
-            cbWh = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dtProduct).BeginInit();
             ((System.ComponentModel.ISupportInitialize)numStockQty).BeginInit();
             SuspendLayout();
@@ -135,21 +134,11 @@
             btnRecord.UseVisualStyleBackColor = true;
             btnRecord.Click += btnRecord_Click;
             // 
-            // cbWh
-            // 
-            cbWh.FormattingEnabled = true;
-            cbWh.Location = new Point(829, 146);
-            cbWh.Name = "cbWh";
-            cbWh.Size = new Size(121, 23);
-            cbWh.TabIndex = 19;
-            cbWh.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
-            // 
             // ViewProducts
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1170, 650);
-            Controls.Add(cbWh);
             Controls.Add(btnRecord);
             Controls.Add(numStockQty);
             Controls.Add(btnStockOut);
@@ -181,6 +170,5 @@
         private Button btnStockIn;
         private NumericUpDown numStockQty;
         private Button btnRecord;
-        private ComboBox cbWh;
     }
 }

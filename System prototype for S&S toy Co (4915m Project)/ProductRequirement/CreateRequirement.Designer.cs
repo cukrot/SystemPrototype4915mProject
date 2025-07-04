@@ -110,9 +110,9 @@
             label2.AutoSize = true;
             label2.Location = new Point(14, 15);
             label2.Name = "label2";
-            label2.Size = new Size(63, 15);
+            label2.Size = new Size(110, 15);
             label2.TabIndex = 2;
-            label2.Text = "Find by ID";
+            label2.Text = "Find Product by ID";
             // 
             // txtFindByID
             // 
@@ -153,9 +153,9 @@
             label4.AutoSize = true;
             label4.Location = new Point(13, 15);
             label4.Name = "label4";
-            label4.Size = new Size(85, 15);
+            label4.Size = new Size(132, 15);
             label4.TabIndex = 8;
-            label4.Text = "Find By Name";
+            label4.Text = "Find Product By Name";
             // 
             // dtOrderline
             // 
@@ -176,7 +176,7 @@
             // 
             // btnAddProduct
             // 
-            btnAddProduct.Location = new Point(581, 297);
+            btnAddProduct.Location = new Point(581, 314);
             btnAddProduct.Name = "btnAddProduct";
             btnAddProduct.Size = new Size(97, 23);
             btnAddProduct.TabIndex = 16;
@@ -190,7 +190,7 @@
             btnRemoveProduct.Name = "btnRemoveProduct";
             btnRemoveProduct.Size = new Size(97, 23);
             btnRemoveProduct.TabIndex = 17;
-            btnRemoveProduct.Text = "Add Product";
+            btnRemoveProduct.Text = "Remove Product";
             btnRemoveProduct.UseVisualStyleBackColor = true;
             btnRemoveProduct.Click += btnRemoveProduct_Click;
             // 
@@ -200,7 +200,7 @@
             btnSubmit.Name = "btnSubmit";
             btnSubmit.Size = new Size(97, 23);
             btnSubmit.TabIndex = 18;
-            btnSubmit.Text = "Add Product";
+            btnSubmit.Text = "Create";
             btnSubmit.UseVisualStyleBackColor = true;
             btnSubmit.Click += btnSubmit_Click;
             // 

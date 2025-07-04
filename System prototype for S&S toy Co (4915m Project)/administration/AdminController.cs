@@ -17,6 +17,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.administration
         private string empoyeeFilter_expression;
         private DataTable dtEmp;
         private DataTable dtUser;
+        private DataTable alluserData;
         private string[] status = new string[]
         {
             "Active",
@@ -104,6 +105,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.administration
 
                 try {
                     dtUser = await GetTableData("User"); // Assuming "User" is the table name for user data
+                    alluserData = dtUser.Copy();
                 }
                 catch (Exception ex)
                 {
@@ -277,7 +279,21 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.administration
         internal async Task<bool> SubmitUserSettings(DataTable dt, string text1, string text2)
         {
             // As this page is for user registration or resetting, while isUser is for checking if the user exists or not
-            // Here you would typically call a method to save the user settings to the database
+            if (string.IsNullOrWhiteSpace(text1) || string.IsNullOrWhiteSpace(text2))
+            {
+                MessageBox.Show("Please enter both user name and password.");
+                return false; // Submission failed
+            }
+            // Check if the text1 matches the user name in the DataTable
+            DataTable dataT = alluserData.Copy();
+            DataView dv = dataT.DefaultView;
+            dv.RowFilter = $"UserName = '{text1}'"; // Filter by UserName
+            if (dv.Count > 0)
+            {
+                MessageBox.Show("User name already exists. Please choose a different user name.");
+                return false; // Submission failed due to duplicate user name
+            }
+
             using (SHA256 sha256 = SHA256.Create())
             {
                 byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(text2));

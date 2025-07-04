@@ -90,7 +90,8 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.SuppyChain
                 MessageBox.Show("Please find a purchase order first.");
                 return;
             } //compare the PurchaseID from the text box with the one in the target row
-            if (txtpID.Text.Trim() == targetRow.Rows[0]["PurchaseID"].ToString())
+            string purchaseID = (string)targetRow.Rows[0]["PurchaseID"];
+            if (txtpID.Text.Trim() != purchaseID)
             {
                 MessageBox.Show("The Purchase ID does not match the selected order.");
                 return;
@@ -117,7 +118,6 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.SuppyChain
             //Insert the inward record into the database
             //InwardID(null), PurchaseID, EmployeeID, Date, Remark
             try {
-                string purchaseID = targetRow.Rows[0]["PurchaseID"].ToString();
                 string employeeID = SystemController.getEmpID(); // Assuming this method retrieves the current employee ID
                 string date = txtDate.Text.Trim();
                 string remark = richTextBox1.Text.Trim(); // Assuming you have a text box for remarks
@@ -131,7 +131,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.SuppyChain
                 newRow["InwardID"] = null; // Assuming InwardID is auto-generated, set it to DBNull
                 newRow["PurchaseID"] = purchaseID; // Set the PurchaseID from the target row
                 newRow["EmployeeID"] = employeeID; // Set the EmployeeID from the current session
-                newRow["Date"] = date; // Parse the date from the text box
+                newRow["Date"] = DateTime.Parse(date); // Parse the date from the text box
                 newRow["Remark"] = remark; // Set the remark from the text box
 
                 dataTable.Rows.Add(newRow); // Add the new row to the DataTable
@@ -150,21 +150,24 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.SuppyChain
                 }
                 // Find the row in the inventory DataTable that matches the MaterialID and WarehouseID
                 DataRow[] inventoryRows = dtmInv.Select($"MaterialID = '{materialID}' AND WarehouseID = '{warehouseID}'");
+                dtmInv.AcceptChanges();
                 if (inventoryRows.Length == 0)
                 { //A a new row if no matching inventory row is found
+                    
                     DataRow newInventoryRow = dtmInv.NewRow();
                     newInventoryRow["MaterialID"] = materialID;
                     newInventoryRow["WarehouseID"] = warehouseID;
                     newInventoryRow["Qty"] = qty; // Set the quantity from the target row
-                    newInventoryRow["WarehouseLoc"] = warehouseLoc; // Set the warehouse shelf location
+                    newInventoryRow["Loc"] = warehouseLoc; // Set the warehouse shelf location
                     dtmInv.Rows.Add(newInventoryRow); // Add the new inventory row to the DataTable
                 }
                 else
                 {
                     // Update the existing inventory row with the new quantity and warehouse shelf location
                     DataRow inventoryRow = inventoryRows[0];
-                    inventoryRow["Qty"] = (int)inventoryRow["Qty"] + qty; // Increment the quantity by the received amount
-                    inventoryRow["WarehouseLoc"] = warehouseLoc; // Update the warehouse shelf location
+                    int qtyFromdt = int.Parse(inventoryRow["Qty"].ToString());
+                    inventoryRow["Qty"] = qtyFromdt + qty; // Increment the quantity by the received amount
+                    inventoryRow["Loc"] = warehouseLoc; // Update the warehouse shelf location
                 }
 
 

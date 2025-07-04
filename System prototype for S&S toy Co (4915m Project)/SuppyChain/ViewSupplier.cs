@@ -81,7 +81,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.SuppyChain
             }
             DataTable dt = dtSuplplierMaterial.Copy();
             DataView dv = new DataView(dt);
-            dv.RowFilter = $"SupplierName LIKE '%{name}%' OR MaterialName LIKE '%{name}%'";
+            dv.RowFilter = $"SuppilierName LIKE '%{name}%' OR MaterialName LIKE '%{name}%'";
             dgv.DataSource = dv;
         }
     }
