@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting2;
+using System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
@@ -36,6 +38,20 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
         public TestControll2()
         {
             setApi("/api/SnSToyCoTestAPI/");
+        }
+        public void openPage(int page)
+        {
+            switch (page)
+            {
+                case 0: // Form2
+                    Form2 form2 = new Form2(this);
+                    form2.ShowDialog();
+                    break;
+                case 1:
+                    Test_Insert formInsert = new Test_Insert(this);
+                    formInsert.ShowDialog();
+                    break;
+            }
         }
 
         //recommend to see useable api in SubSystemController.cs
@@ -145,6 +161,22 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.JustTesting
                 throw new Exception($"An error occurred while inserting data: {ex.Message}", ex);
             }
             return rowsAffected;
+        }
+
+        internal void CloseTestPage()
+        {
+            //close all the open forems related to this subsystem
+            FormCollection openForms = Application.OpenForms; // Get all open forms in the application
+            if (openForms != null)
+            {
+                foreach (Form form in openForms)
+                {
+                    if (form is Form2 || form is Test_Insert) // Check if the form is of the specified types
+                    {
+                        form.Close(); // Close the form if it matches the specified types
+                    }
+                }
+            }
         }
     }
 }

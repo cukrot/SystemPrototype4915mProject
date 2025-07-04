@@ -11,14 +11,14 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
 {
     public class SaleController : SubSystemController
     {
-        ViewRequirements viewRequirements;
         DataTable dtProductRequirements_view;
         DataTable dtProductRequirements_edit;
         DataRow row_editing; // This will hold the row being edited
         DataTable dtProducts;
 
         DataTable dtOrderLines; // Assuming this is used for order lines
-        DataTable order_create; // Assuming this is used for creating orders
+        DataTable dtOrderLines_view; // Assuming this is used for viewing order lines
+        DataTable dtOrder_create; // Assuming this is used for creating orders
         private double totalPrice; // Assuming this is used to calculate the total price of the order
         public SaleController()
         {
@@ -158,13 +158,17 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
 
         internal async Task<bool> UpdateRequirement(Dictionary<string, string> updatedFields)
         {   
-            if (row_editing == null)
+            if (row_editing == null ||dtProductRequirements_edit == null)
             {
                 throw new InvalidOperationException("No row is currently being edited.");
             }
             try
             {
-                // Update the row with the new values
+                dtProductRequirements_edit.AcceptChanges(); // Ensure the DataTable is in a clean state before editing
+                foreach (DataColumn col in dtProductRequirements_edit.Columns)
+                {
+                    col.ReadOnly = false; // Set all columns to ReadOnly
+                }                // Update the row with the new values
                 foreach (var field in updatedFields)
                 {
                     if (row_editing.Table.Columns.Contains(field.Key))
@@ -177,12 +181,10 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
                     }
                 }
                 // Accept changes to the DataRow
-                row_editing.AcceptChanges();
-                // Accept changes to the DataTable
-                dtProductRequirements_edit.AcceptChanges();
+                DataTable dtUpdated = dtProductRequirements_edit.GetChanges();
 
                 // Update the DataTable in the API
-                int rowsUpdated = await UpdateProductRequiremen(dtProductRequirements_edit);
+                int rowsUpdated = await UpdateProductRequiremen(dtUpdated);
                 if (rowsUpdated > 0)
                 {
                     // If the update was successful, refresh the view DataTable
@@ -271,42 +273,53 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
                     dtOrderLines.Rows.Clear(); // Clear any existing rows
                     this.totalPrice = 0; // Reset total price
                 }
+                if (dtOrderLines_view == null)
+                {
+                    dtOrderLines_view = new DataTable("OrderLinesView");
+                    dtOrderLines_view.Columns.Add("ProductID", typeof(string));
+                    dtOrderLines_view.Columns.Add("Name", typeof(string)); // Assuming product name is available
+                    dtOrderLines_view.Columns.Add("quantity", typeof(double));
+                    dtOrderLines_view.Columns.Add("UnitPrice", typeof(double)); // Assuming unit price is available
+                    dtOrderLines_view.Columns.Add("Amount", typeof(double)); // Assuming total price is calculated as Amount
+                }
                 if (string.IsNullOrEmpty(productID) || quantity <= 0)
                 {
                     throw new ArgumentException("Product ID cannot be null or empty and quantity must be greater than zero.");
-                }
-            
-                if (dtOrderLines == null)
-                {
-                    DataTable dt = await GetTableData("orderline"); // specify table name
-                    dtOrderLines = dt.Copy();
                 }
                 foreach (DataColumn col in dtOrderLines.Columns)
                 {
                     col.ReadOnly = false; // Set all columns to ReadOnly
                 }
-                // Create a new DataRow for the order line
-                // ProductID, Name, Quantity, Unit Price, TotalPrice
+                // Create a new DataRow for the order line view
                 string productName = dtProducts.Select($"ProductID = '{productID}'").FirstOrDefault()?["Name"].ToString() ?? "Unknown Product";
-                int unitPrice = dtProducts.Select($"ProductID = '{productID}'").FirstOrDefault()?["UnitPrice"] is int price ? price : 0;
-                int amount = unitPrice * quantity; // Calculate total price based on unit price and quantity
-                DataRow newRow = dtOrderLines.NewRow();
+                double unitPrice = dtProducts.Select($"ProductID = '{productID}'").FirstOrDefault()?["UnitPrice"] is int price ? price : 0;
+                double amount = unitPrice * quantity; // Calculate total price based on unit price and quantity
+                DataRow newRow = dtOrderLines_view.NewRow();
                 newRow["ProductID"] = productID;
                 newRow["Name"] = productName; // Assuming the product name is available in the DataTable
-                newRow["Qty"] = quantity;
+                newRow["quantity"] = quantity;
                 newRow["UnitPrice"] = unitPrice; // Assuming the unit price is available in the DataTable
                 newRow["Amount"] = amount; // Calculate total price
+                this.totalPrice += amount; // Update the total price for the order
 
                 // Add the new row to the DataTable
-                dtOrderLines.Rows.Add(newRow);
-                
+                dtOrderLines_view.Rows.Add(newRow);
                 // Accept changes to the DataTable
-                dtOrderLines.AcceptChanges();
-                foreach (DataColumn col in dtOrderLines.Columns)
+                dtOrderLines_view.AcceptChanges();
+                foreach (DataColumn col in dtOrderLines_view.Columns)
                 {
                     col.ReadOnly = true; // Set all columns back to ReadOnly after adding the new row
                 }
-                return dtOrderLines.Copy(); // Return the updated DataTable with the new order line
+
+                // create a orderline
+                DataRow orderline = dtOrderLines.NewRow();
+                orderline["OrderID"] = "";
+                orderline["ProductID"] = productID;
+                orderline["Qty"] = quantity; // Set the quantity
+                dtOrderLines.Rows.Add(orderline);
+
+
+                return dtOrderLines_view.Copy(); // Return the updated DataTable with the new order line
             }
             catch (Exception ex)
             {
@@ -324,8 +337,17 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
             {
                 // Find the row with the specified ProductID
                 DataRow[] rowsToRemove = dtOrderLines.Select($"ProductID = '{productID}'");
-                if (rowsToRemove.Length > 0)
+                DataRow[] rowToRemove_view = dtOrderLines_view.Select($"ProductID = '{productID}'");
+                if (rowsToRemove.Length > 0 && rowToRemove_view.Length > 0)
                 {
+                    // Remove the corresponding row from the view DataTable
+                    foreach (DataRow row in rowToRemove_view)
+                    {
+                        dtOrderLines_view.Rows.Remove(row); // Remove the row from the view DataTable
+                    }
+                    dtOrderLines_view.AcceptChanges(); // Accept changes to the view DataTable
+                    // Remove the order line from the main DataTable
+                    
                     foreach (DataRow row in rowsToRemove)
                     {
                         dtOrderLines.Rows.Remove(row); // Remove the row from the DataTable
@@ -336,11 +358,83 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
                 {
                     throw new KeyNotFoundException($"No order line found with ProductID '{productID}'.");
                 }
-                return dtOrderLines.Copy(); // Return the updated DataTable
+                return dtOrderLines_view.Copy(); // Return the updated DataTable
             }
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"Error removing product from requirement: {ex.Message}", ex);
+            }
+        }
+
+        internal async Task<bool> SubmitRequirement(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new ArgumentException("Invalid Customer ID provided.");
+            }
+            string[] customerID = new string[] { id }; // Assuming id is the customer ID
+            bool isValidCustomerID = await SystemController.vaildifyID("customer", customerID);
+            if (!isValidCustomerID)
+            {
+                throw new ArgumentException("Invalid Customer ID provided.");
+            }
+            if (dtOrderLines == null || dtOrderLines.Rows.Count == 0)
+            {
+                throw new InvalidOperationException("No products have been added to the order.");
+            }
+            try
+            {
+                if (dtOrder_create == null)
+                {
+                    dtOrder_create = await GetEmptyTable("order"); // specify table name
+                }
+                dtOrder_create.Clear(); // Clear any existing rows in the order DataTable
+                dtOrder_create.AcceptChanges(); // Accept changes to the DataTable
+                // Create a new DataRow for the order
+                //{ "order", new string[] { "OrderID", "OrderDate", "Status", "SaleID", "CustomerID", "Amount" } },
+                string[] orderColumn = TableColumns.GetColumns("order"); // Get the columns for the order table
+
+                DataRow newOrder = dtOrder_create.NewRow();
+                newOrder["OrderID"] = null; //Key must be null for auto-increment
+                newOrder["OrderDate"] = DateTime.Today; // Set the current date and time
+                newOrder["Status"] = "Pending"; // Set the initial status of the order
+                newOrder["SaleID"] = GetSaleID(); // Set the SaleID
+                newOrder["CustomerID"] = id; // Set the CustomerID
+                newOrder["Amount"] = this.totalPrice; // Set the total price of the order
+                dtOrder_create.Rows.Add(newOrder); // Add the new order row to the DataTable
+                dtOrder_create.AcceptChanges(); // Accept changes to the DataTable
+                dtOrder_create.Rows[0].SetAdded(); // Mark the new row as added
+
+                // Assume Sus=bSystemController has a method to add the order and order lines to the database
+                int orderRowsAffected = await InsertOneToManyTables(dtOrder_create, dtOrderLines, "order", "orderline");
+                if (orderRowsAffected > 0)
+                {
+                    return true; // Indicate success
+                }
+                else
+                {
+                    throw new InvalidOperationException("Failed to submit the requirement. Please check your input.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error submitting requirement: {ex.Message}", ex);
+            }
+        }
+
+        internal void CloseProductRequirementPage()
+        {
+            //close all the open forems related to product requirements
+            FormCollection openForms = Application.OpenForms; // Get all open forms in the application
+            if (openForms != null)
+            {
+                foreach (Form form in openForms)
+                {
+                    if (form is ViewRequirements || form is EditRequirement || form is CreateRequirement)
+                    {
+                        form.Close(); // Close the form if it matches the specified types
+                    }
+                }
             }
         }
     }

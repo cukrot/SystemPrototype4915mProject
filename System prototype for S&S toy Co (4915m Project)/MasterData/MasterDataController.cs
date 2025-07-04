@@ -29,6 +29,18 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.MasterData
                     throw new ArgumentOutOfRangeException(nameof(pageIndex), "Invalid page index for Master Data Management.");
             }
         }
+        internal void CloseMasterDataPage()
+        {
+            // Close all open forms related to Master Data Management
+            foreach (Form form in Application.OpenForms)
+            {
+                if (form is MasterDataMaintance || form is CustomerData || form is EmployeeData)
+                {
+                    form.Close();
+                }
+            }
+            
+        }
         public async Task<DataTable> GetCustomerData()
         {
             DataTable dt = null;
@@ -130,5 +142,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.MasterData
         {
             masterDataTableFilter_expression = AddFilterItem(filterColumn, filterValue, masterDataTable, masterDataTableFilter_expression);
         }
+
+
     }
 }

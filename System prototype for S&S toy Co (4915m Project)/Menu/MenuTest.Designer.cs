@@ -43,16 +43,19 @@
             btnSub1 = new Button();
             btnSub3 = new Button();
             btnSub4 = new Button();
+            btnSub5 = new Button();
+            btnSub6 = new Button();
+            btnLogOut = new Button();
             flowLayoutPanel1.SuspendLayout();
             flowLayoutPanel2.SuspendLayout();
             SuspendLayout();
             // 
             // btnSub2
             // 
-            btnSub2.Location = new Point(158, 20);
-            btnSub2.Margin = new Padding(20);
+            btnSub2.Location = new Point(170, 15);
+            btnSub2.Margin = new Padding(15);
             btnSub2.Name = "btnSub2";
-            btnSub2.Size = new Size(98, 50);
+            btnSub2.Size = new Size(125, 75);
             btnSub2.TabIndex = 0;
             btnSub2.Text = "button1";
             btnSub2.UseVisualStyleBackColor = true;
@@ -179,18 +182,20 @@
             flowLayoutPanel2.Controls.Add(btnSub2);
             flowLayoutPanel2.Controls.Add(btnSub3);
             flowLayoutPanel2.Controls.Add(btnSub4);
+            flowLayoutPanel2.Controls.Add(btnSub5);
+            flowLayoutPanel2.Controls.Add(btnSub6);
             flowLayoutPanel2.Location = new Point(354, 100);
             flowLayoutPanel2.Margin = new Padding(5);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
-            flowLayoutPanel2.Size = new Size(337, 241);
+            flowLayoutPanel2.Size = new Size(359, 360);
             flowLayoutPanel2.TabIndex = 3;
             // 
             // btnSub1
             // 
-            btnSub1.Location = new Point(20, 20);
-            btnSub1.Margin = new Padding(20);
+            btnSub1.Location = new Point(15, 15);
+            btnSub1.Margin = new Padding(15);
             btnSub1.Name = "btnSub1";
-            btnSub1.Size = new Size(98, 50);
+            btnSub1.Size = new Size(125, 75);
             btnSub1.TabIndex = 3;
             btnSub1.Text = "button12";
             btnSub1.UseVisualStyleBackColor = true;
@@ -198,10 +203,10 @@
             // 
             // btnSub3
             // 
-            btnSub3.Location = new Point(20, 110);
-            btnSub3.Margin = new Padding(20);
+            btnSub3.Location = new Point(15, 120);
+            btnSub3.Margin = new Padding(15);
             btnSub3.Name = "btnSub3";
-            btnSub3.Size = new Size(98, 50);
+            btnSub3.Size = new Size(125, 75);
             btnSub3.TabIndex = 1;
             btnSub3.Text = "button10";
             btnSub3.UseVisualStyleBackColor = true;
@@ -209,19 +214,53 @@
             // 
             // btnSub4
             // 
-            btnSub4.Location = new Point(158, 110);
-            btnSub4.Margin = new Padding(20);
+            btnSub4.Location = new Point(170, 120);
+            btnSub4.Margin = new Padding(15);
             btnSub4.Name = "btnSub4";
-            btnSub4.Size = new Size(98, 50);
+            btnSub4.Size = new Size(125, 75);
             btnSub4.TabIndex = 2;
             btnSub4.Text = "button11";
             btnSub4.UseVisualStyleBackColor = true;
+            btnSub4.Click += btnSub4_Click_1;
+            // 
+            // btnSub5
+            // 
+            btnSub5.Location = new Point(15, 225);
+            btnSub5.Margin = new Padding(15);
+            btnSub5.Name = "btnSub5";
+            btnSub5.Size = new Size(125, 75);
+            btnSub5.TabIndex = 4;
+            btnSub5.Text = "button11";
+            btnSub5.UseVisualStyleBackColor = true;
+            btnSub5.Click += button1_Click;
+            // 
+            // btnSub6
+            // 
+            btnSub6.Location = new Point(170, 225);
+            btnSub6.Margin = new Padding(15);
+            btnSub6.Name = "btnSub6";
+            btnSub6.Size = new Size(125, 75);
+            btnSub6.TabIndex = 5;
+            btnSub6.Text = "button11";
+            btnSub6.UseVisualStyleBackColor = true;
+            btnSub6.Click += button2_Click;
+            // 
+            // btnLogOut
+            // 
+            btnLogOut.Location = new Point(638, 517);
+            btnLogOut.Name = "btnLogOut";
+            btnLogOut.Size = new Size(75, 23);
+            btnLogOut.TabIndex = 4;
+            btnLogOut.Text = "Logout";
+            btnLogOut.UseVisualStyleBackColor = true;
+            btnLogOut.Click += btnLogOut_Click;
             // 
             // MenuTest
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 552);
+            Controls.Add(btnLogOut);
             Controls.Add(flowLayoutPanel2);
             Controls.Add(flowLayoutPanel1);
             Name = "MenuTest";
@@ -248,5 +287,8 @@
         private Button btnSubMenu7;
         private Button btnSubMenu8;
         private Button btnSubMenu9;
+        private Button btnSub5;
+        private Button btnSub6;
+        private Button btnLogOut;
     }
 }

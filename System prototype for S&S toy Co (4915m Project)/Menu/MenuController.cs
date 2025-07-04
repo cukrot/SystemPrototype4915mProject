@@ -47,33 +47,6 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
 
 
 
-        internal void btnClicked_Sub2() //This method is called by the sub button 2 in the menu   // < 2nd > sub button
-        {
-            switch (menuCurrent)
-            {
-                case "MasterData Management":
-                    Form form_masterdata_emp = new MasterData.EmployeeData();
-                    form_masterdata_emp.Show();
-                    break;
-                case "Product Requirements":
-                    //Form form_requirement_add = new ProductRequirement.AddRequirements();
-                    break;
-                case "Inventory Management":
-                    Form form_inv_viewMaterial = new Inventory.ViewMaterial();
-                    form_inv_viewMaterial.Show();
-                    break;
-                case "Delivery Management":
-                    //Form form_delivery_add = new Delivery.AddDeliveryOrder();
-                    break;
-                case "Test Menu":
-                    Form form_test2 = new JustTesting.TestAnything();
-                    form_test2.Show();
-                    break;
-                default:
-                    throw new InvalidOperationException("Unknown menu item: " + menuCurrent);
-            }
-        }
-
         internal void setSubMenu(int index)
         {
             if (index > menuOfSubsystem.Length) //
@@ -93,19 +66,18 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
                 }
             }
         }
-        /*
-        private string[] menuOfSubsystem =
+
+        internal void btnLogout()
         {
-           "MasterData Management", //IT
-           "Product Requirements", //sale, marketing, sale & marketing
-           "Production Processing Management", //Production
-           "Material Procurement", //Supply Chain Management
-           "Inventory Management", //Inventory Management, Supply Chain Management
-           "Dispatch Processing", //Supply Chain Management
-           "After Service Management", //Customer Service Department
-           "Administration Management", //IT
-           "Test Menu" //Just for testing purposes
-        };
-        */
+            System.Windows.Forms.DialogResult result = MessageBox.Show("Are you sure you want to log out?", "Logout Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result == System.Windows.Forms.DialogResult.Yes)
+            {
+                systemController.logout();
+            }
+            else
+            {
+                // User chose not to log out, do nothing or handle accordingly
+            }
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
             InitializeComponent();
             this.menuController = menuController;
             this.buttonsOfSubButton = new Button[] {
-                btnSub1, btnSub2, btnSub3, btnSub4
+                btnSub1, btnSub2, btnSub3, btnSub4, btnSub5, btnSub6
             };
             this.buttonsOfSubMenu = new Button[] {
                 btnSubMenu1, btnSubMenu2, btnSubMenu3, btnSubMenu4, btnSubMenu5, btnSubMenu6, btnSubMenu7, btnSubMenu8, btnSubMenu9
@@ -45,6 +45,8 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
             btnSub2.Visible = false;
             btnSub3.Visible = false;
             btnSub4.Visible = false;
+            btnSub5.Visible = false;
+            btnSub6.Visible = false;
         }
         public void setSubMenuVisible(int numberOfSubMenus, string[] pagesOfSubsytem)
         {
@@ -131,6 +133,26 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Menu
         private void btnSub4_Click(object sender, EventArgs e)
         {
             menuController.btnClicked_Sub(3);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            menuController.btnClicked_Sub(4);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            menuController.btnClicked_Sub(5);
+        }
+
+        private void btnSub4_Click_1(object sender, EventArgs e)
+        {
+            menuController.btnClicked_Sub(3);
+        }
+
+        private void btnLogOut_Click(object sender, EventArgs e)
+        {
+            menuController.btnLogout();
         }
     }
 }

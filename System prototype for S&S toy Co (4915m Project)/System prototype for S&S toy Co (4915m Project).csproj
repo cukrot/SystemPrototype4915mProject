@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DatabaseAccessController\DatabaseAccessController.csproj" />
     <ProjectReference Include="..\EntityModels\EntityModels.csproj" />
   </ItemGroup>
 

@@ -60,7 +60,7 @@ namespace WebAPI.Controllers
                 if (dtUpdated != null)
                     rowsUpdated = dboGetCompanyData.UpdateTable(dtUpdated, tableName, keysName);
                 if (dtInserted != null)
-                    rowsUpdated = dboGetCompanyData.InsertTable(dtInserted, tableName);
+                    rowsUpdated = dboGetCompanyData.InsertTable(dtInserted, tableName, keysName);
                 return rowsUpdated;
             }
             catch (Exception ex)
@@ -75,7 +75,7 @@ namespace WebAPI.Controllers
             {
                 dboGetCompanyData dboGetCompanyData = new dboGetCompanyData(_configuration["ConnectionStrings_of_snstoycotest"]);
                 DataTable dtResult = dboGetCompanyData.GetTableData(tableName);
-
+                dtResult.TableName = tableName; // Set the table name for clarity
                 // Convert DataTable to JSON string
                 string jsonString = JsonConvert.SerializeObject(dtResult);
 
@@ -95,8 +95,30 @@ namespace WebAPI.Controllers
             {
                 DataTable dtInserted = JsonConvert.DeserializeObject<DataTable>(json.dtAdded);
                 String tableName = JsonConvert.DeserializeObject<String>(json.tableName);
+                string[] keysName = JsonConvert.DeserializeObject<String[]>(json.keysName);
                 dboGetCompanyData dboGetCompanyData = new dboGetCompanyData(_configuration["ConnectionStrings_of_snstoycotest"]);
-                int rowsInserted = dboGetCompanyData.InsertTable(dtInserted, tableName);
+                int rowsInserted = dboGetCompanyData.InsertTable(dtInserted, tableName, keysName);
+                return rowsInserted;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [HttpPost("InsertOneToManyTable")]
+        public int InsertOneToManyTables([FromBody] ManyJasonTable jasonTables)
+        {
+            try
+            {
+                DataTable dtInsertedOne = JsonConvert.DeserializeObject<DataTable>(jasonTables.singleKeyTable.dtAdded);
+                String tableNameOne = JsonConvert.DeserializeObject<String>(jasonTables.singleKeyTable.tableName);
+                DataTable dtInsertedMany = JsonConvert.DeserializeObject<DataTable>(jasonTables.manyKeyTable.dtAdded);
+                String tableNameMany = JsonConvert.DeserializeObject<String>(jasonTables.manyKeyTable.tableName);
+                dboGetCompanyData dboGetCompanyData = new dboGetCompanyData(_configuration["ConnectionStrings_of_snstoycotest"]);
+                Dictionary<string, string[]> keyNames = TableColumns.PrimaryKeys;
+                string singleKey = keyNames[tableNameOne][0]; // Assuming the first key is the primary key for the one side
+                string[] manyKeys = keyNames[tableNameMany]; // Assuming the many side has multiple keys
+                int rowsInserted = dboGetCompanyData.InsertOneToManyTables(dtInsertedOne, dtInsertedMany, tableNameOne, tableNameMany, singleKey, manyKeys);
                 return rowsInserted;
             }
             catch (Exception ex)
@@ -131,6 +153,35 @@ namespace WebAPI.Controllers
                 // Convert DataTable to JSON string
                 string jsonString = JsonConvert.SerializeObject(dtResult);
                 // Return JSON string
+                return jsonString;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [HttpPost("ExecuteNonQuery")]
+        public int ExecuteNonQuery([FromBody] String queryString)
+        {
+            try
+            {
+                dboGetCompanyData dboGetCompanyData = new dboGetCompanyData(_configuration["ConnectionStrings_of_snstoycotest"]);
+                int rowsAffected = dboGetCompanyData.ExecuteNonQuery(queryString);
+                return rowsAffected;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [HttpPost("ExecuteGetQuery")]
+        public string ExecuteGetQuery([FromBody] String queryString)
+        {
+            try
+            {
+                dboGetCompanyData dboGetCompanyData = new dboGetCompanyData(_configuration["ConnectionStrings_of_snstoycotest"]);
+                DataTable dtResult = dboGetCompanyData.ExecuteGetQuery(queryString);
+                string jsonString = JsonConvert.SerializeObject(dtResult);
                 return jsonString;
             }
             catch (Exception ex)

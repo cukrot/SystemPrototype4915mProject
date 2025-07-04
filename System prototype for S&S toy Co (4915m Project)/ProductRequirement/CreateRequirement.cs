@@ -139,8 +139,29 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.ProductRequirement
             }
         }
 
-        private void btnSubmit_Click(object sender, EventArgs e) //Insert the requirement into the database
+        private async void btnSubmit_Click(object sender, EventArgs e) //Insert the requirement into the database
         {
+            if (dtOrderline.Rows.Count == 0)
+            {
+                MessageBox.Show("No products added to the requirement. Please add products before submitting.");
+                return;
+            }
+            try
+            {
+                // Assuming control has a method to submit the requirement
+                string customerID = txtCustomerID.Text.Trim();
+                bool isSuccess = await control.SubmitRequirement(customerID);
+                if (!isSuccess) {
+                    MessageBox.Show("Failed to submit requirement. Please check your input.");
+                    return;
+                }
+                MessageBox.Show("Requirement submitted successfully.");
+                this.Close(); // Close the form after submission
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error submitting requirement: {ex.Message}");
+            }
         }
 
         private void dtProductInfo_SelectionChanged(object sender, EventArgs e)

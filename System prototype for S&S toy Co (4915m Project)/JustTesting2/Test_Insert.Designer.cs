@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lbColumns = new ListView();
             label2 = new Label();
             label3 = new Label();
             label4 = new Label();
@@ -39,14 +38,6 @@
             txtEmail = new TextBox();
             btnSubmit = new Button();
             SuspendLayout();
-            // 
-            // lbColumns
-            // 
-            lbColumns.Location = new Point(325, 74);
-            lbColumns.Name = "lbColumns";
-            lbColumns.Size = new Size(310, 214);
-            lbColumns.TabIndex = 0;
-            lbColumns.UseCompatibleStateImageBehavior = false;
             // 
             // label2
             // 
@@ -126,7 +117,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(354, 360);
             Controls.Add(btnSubmit);
             Controls.Add(txtEmail);
             Controls.Add(txtAddress);
@@ -136,17 +127,14 @@
             Controls.Add(label4);
             Controls.Add(label3);
             Controls.Add(label2);
-            Controls.Add(lbColumns);
             Name = "Test_Insert";
-            Text = "Test_Insert";
+            Text = "Insert Customer Data";
             Load += Test_Insert_Load;
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private ListView lbColumns;
         private Label label2;
         private Label label3;
         private Label label4;

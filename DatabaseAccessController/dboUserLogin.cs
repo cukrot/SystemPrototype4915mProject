@@ -20,7 +20,7 @@ namespace DatabaseAccessController
             // Note: In a real application, you should use parameterized queries to prevent SQL injection attacks.
             String sqlCmd = sqlCmdForID; // Assuming the first query returns all necessary fields
             DataTable dt = GetData(sqlCmd);
-            if (dt.Rows.Count < 0)
+            if (dt.Rows.Count == 0)
             {
                 return new Dictionary<string, string>
                 {
@@ -35,7 +35,7 @@ namespace DatabaseAccessController
                 {
                     { "EmployeeID", string.Empty },
                     { "Department", string.Empty },
-                    { "Position", string.Empty },
+                    { "Role", string.Empty },
                     { "Status", "Locked" },
                     { "isLoginSuccess", "false" } // Indicating login was not successful due to lockout
                 };
@@ -61,7 +61,7 @@ namespace DatabaseAccessController
                 // If the user is not root, get the EmployeeID from the first row
                 // and query the employee table for more information
                 string employeeID = row["EmployeeID"].ToString();
-                String sqlCmdForInfo = $"SELECT EmployeeID, Department, Position FROM employee WHERE EmployeeID = '{employeeID}'";
+                String sqlCmdForInfo = $"SELECT EmployeeID, Department, Role FROM employee WHERE EmployeeID = '{employeeID}'";
                 DataTable infoDt = GetData(sqlCmdForInfo);
                 row = infoDt.Rows[0]; // Assuming the query returns only one row for the employee
                 // Return the employee information in a dictionary
@@ -69,7 +69,7 @@ namespace DatabaseAccessController
                 {
                     { "EmployeeID", row["EmployeeID"].ToString() },
                     { "Department", row["Department"].ToString() },
-                    { "Position", row["Position"].ToString() },
+                    { "Role", row["Role"].ToString() },
                     { "Status", "Active" }, // Assuming the user is active if they are found in the database
                     { "isLoginSuccess", "true" } // Indicating login was successful
                 };

@@ -127,5 +127,19 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Login
                 return builder.ToString();
             }
         }
+
+        internal void ShowLoginPage()
+        {
+            // Show the login page again if needed
+            if (loginPage != null && !loginPage.IsDisposed)
+            {
+                loginPage.Show();
+            }
+            else
+            {
+                loginPage = new Login();
+                loginPage.Show();
+            }
+        }
     }
 }

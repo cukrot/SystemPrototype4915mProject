@@ -25,12 +25,12 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Login
             String username = txtUserName.Text;
             String password = txtPassword.Text;
             bool isValid = await loginController.Login(username, password);
+            txtUserName.Text = "";
+            txtPassword.Text = "";
             if (!isValid)
             {
                 MessageBox.Show("Incorrect user name or password. "
                             + "Please try again.");
-                txtUserName.Text = "";
-                txtPassword.Text = "";
             }
         }
 

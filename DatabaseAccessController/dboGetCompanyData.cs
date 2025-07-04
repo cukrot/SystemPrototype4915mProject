@@ -9,27 +9,7 @@ namespace DatabaseAccessController
 {
     public class dboGetCompanyData : dboDatabaseController
     {
-        Dictionary<string, string[]> primaryKeys = new Dictionary<string, string[]>
-        {
-            { "customer", new[] { "CustomerID" } },
-            { "delivery", new[] { "DeliveryID" } },
-            { "employee", new[] { "EmployeeID" } },
-            { "file", new[] { "FileID" } },
-            { "ingredient", new[] { "MaterialID" } },
-            { "material", new[] { "MaterialID" } },
-            { "meeting", new[] { "MeetingID" } },
-            { "meetingparticipant", new[] { "MeetingID", "EmpID" } },
-            { "order", new[] { "OrderID" } },
-            { "orderline", new[] { "OrderID", "ProductID" } },
-            { "payment", new[] { "PaymentID" } },
-            { "product", new[] { "ProductID" } },
-            { "productinventory", new[] { "ProductID", "WarehouseID" } },
-            { "productorder", new[] { "POrderID" } },
-            { "purchase", new[] { "PurchaseID" } },
-            { "purchaseline", new[] { "PurchaseID", "SupplierID", "MaterialID" } },
-            { "supplier", new[] { "SupplierID" } },
-            { "warehouse", new[] { "WarehouseID" } }
-        };
+
         public dboGetCompanyData(string connectionString) : base(connectionString)
         {
         }
@@ -47,7 +27,23 @@ namespace DatabaseAccessController
             DataTable dt = GetData(sqlCmd);
             // Stuff a meaningful row into the DataTable to ensure it has columns
             DataRow dr = dt.NewRow();
-            dr[0] = "Null";
+            //check the data type of the first column and set it to a random value
+            if (dt.Columns.Count > 0)
+            {
+                DataColumn firstColumn = dt.Columns[0];
+                if (firstColumn.DataType == typeof(int) || firstColumn.DataType == typeof(long))
+                {
+                    dr[firstColumn] = 1; // Set to 0 for numeric types
+                }
+                else if (firstColumn.DataType == typeof(string))
+                {
+                    dr[firstColumn] = "Sample"; // Set to a sample string for string types
+                }
+                else if (firstColumn.DataType == typeof(DateTime))
+                {
+                    dr[firstColumn] = DateTime.Now; // Set to current date for DateTime types
+                }
+            }
             dt.Rows.Add(dr);
             return dt;
         }
@@ -58,7 +54,7 @@ namespace DatabaseAccessController
             return GetData(sqlCmd);
         }
 
-        public int InsertTable(DataTable dtInserted, string tableName) // Inserts multiple rows into the specified table
+        public int InsertTable(DataTable dtInserted, string tableName, string[] keysName) // Inserts multiple rows into the specified table
         {
             if (dtInserted == null || dtInserted.Rows.Count == 0)
             {
@@ -66,10 +62,22 @@ namespace DatabaseAccessController
             }
 
             //We need to check the table if it has single or multiple keys
+            // keysName is an array of key column names
             // If the table has a single key, call InsertDataWithNoKeys
-            if (primaryKeys.ContainsKey(tableName) && primaryKeys[tableName].Length == 1)
-                // If the table has a single key, check if the key column values are null or empty, then generate new key values
-                dtInserted = getNewKeyValuesForSingleKey(dtInserted, tableName);
+            if (keysName.Length == 1)
+            {
+                // If the table has a single key, we need to generate the key values for the inserted rows
+                dtInserted = getNewKeyValuesForSingleKey(dtInserted, tableName, keysName);
+            }
+            else if (keysName.Length > 1)
+            {
+                // If the table has multiple keys, we assume that the keys are already set in the DataTable
+                // We do not need to generate new key values
+            }
+            else
+            {
+                throw new ArgumentException("The keysName array must contain at least one key column name.", nameof(keysName));
+            }
 
             return InsertDataWithKey(dtInserted, tableName);
         }
@@ -94,61 +102,66 @@ namespace DatabaseAccessController
             return BatchUpdate(sb.ToString());
         }
 
-        private DataTable getNewKeyValuesForSingleKey(DataTable dtInserted, string tableName)
+        private DataTable getNewKeyValuesForSingleKey(DataTable dtInserted, string tableName, string[] primaryKeys)
         {
-            //first check if values in key column in the inserted table is null or empty string, else throw exception
-            //primaryKeys[tableName] is the name of the key columns for the table
-            //Assuming only one key column exists in the table
-            if (primaryKeys.ContainsKey(tableName) && primaryKeys[tableName].Length == 1)
+            if (dtInserted == null || dtInserted.Rows.Count == 0)
+                throw new ArgumentException("The DataTable to insert cannot be null or empty.", nameof(dtInserted));
+            if (primaryKeys == null || primaryKeys.Length == 0)
+                throw new ArgumentException("primaryKeys must contain at least one key column name.", nameof(primaryKeys));
+
+            string keyName = primaryKeys[0];
+            DataColumn keyColumn = dtInserted.Columns[keyName];
+            if (keyColumn == null)
+                throw new ArgumentException($"Key column '{keyName}' does not exist in the DataTable.", nameof(dtInserted));
+
+            // 取得目前資料庫中最大主鍵值
+            DataTable dtLastKey = GetData($"SELECT MAX(`{keyName}`) FROM `{tableName}`;");
+            object lastKeyObj = dtLastKey.Rows[0][0];
+            string lastKeyStr = lastKeyObj == DBNull.Value ? null : lastKeyObj.ToString();
+
+            if (keyColumn.DataType == typeof(int) || keyColumn.DataType == typeof(long))
             {
-                string keyColumn = primaryKeys[tableName][0];
+                // 處理數字型主鍵
+                int lastKey = 0;
+                if (!string.IsNullOrEmpty(lastKeyStr))
+                    int.TryParse(lastKeyStr, out lastKey);
+
                 foreach (DataRow row in dtInserted.Rows)
                 {
-                    if (row[keyColumn] != DBNull.Value && !string.IsNullOrEmpty(row[keyColumn].ToString()))
-                    {
-                        throw new ArgumentException($"The key column '{keyColumn}' must be null or empty for insertion into '{tableName}'.", nameof(dtInserted));
-                    }
+                    lastKey++;
+                    row[keyName] = lastKey;
                 }
             }
-
-            //Generate key values for the key columns
-            //As key value is a string like "CUST001" or "ORD0001, we need to get the last value from the database by calling GetData method
-            string keyName = primaryKeys[tableName][0];
-            DataTable dtLastKey = GetData($"SELECT MAX(`{keyName}`) FROM `{tableName}`;");
-            string lastKey = dtLastKey.Rows[0][0]?.ToString(); // Get the last key value from the database
-
-            int prefixLength = 0;
-            int numericPartLength = 0;
-            if (string.IsNullOrEmpty(lastKey))
+            else if (keyColumn.DataType == typeof(string))
             {
-                lastKey = "000"; // Start from 000 if no previous key exists
+                // 處理字串型主鍵（如 CUST001）
+                string prefix = "";
+                int numericPart = 0;
+                int numericLength = 3; // 預設數字長度
+
+                if (!string.IsNullOrEmpty(lastKeyStr))
+                {
+                    int prefixLength = lastKeyStr.TakeWhile(char.IsLetter).Count();
+                    prefix = lastKeyStr.Substring(0, prefixLength);
+                    string numericStr = lastKeyStr.Substring(prefixLength);
+                    numericLength = numericStr.Length;
+                    int.TryParse(numericStr, out numericPart);
+                }
+
+                foreach (DataRow row in dtInserted.Rows)
+                {
+                    numericPart++;
+                    string newKey = prefix + numericPart.ToString($"D{numericLength}");
+                    row[keyName] = newKey;
+                }
             }
             else
             {
-                // Check number of aphabetical prefix and numeric suffix
-                prefixLength = lastKey.TakeWhile(char.IsLetter).Count(); // Count letters at the start
-                numericPartLength = lastKey.Length - prefixLength; // Remaining part is numeric
-
-                // Now we can increment the numeric part
-                if (numericPartLength < 3)
-                {
-                    throw new ArgumentException($"The key value '{lastKey}' is not in the expected format with at least 3 digits after the prefix.", nameof(dtInserted));
-                }
-                // Increment the numeric part
-                lastKey = lastKey.Substring(0, prefixLength) + (int.Parse(lastKey.Substring(prefixLength)) + 1).ToString("D3"); // Increment the numeric part
-
-            }
-            // Assign the new key value to the key column in the inserted DataTable
-            foreach (DataRow row in dtInserted.Rows)
-            {
-                row[keyName] = lastKey; // Assign the new key value
-                lastKey = lastKey.Substring(0, prefixLength) + (int.Parse(lastKey.Substring(prefixLength)) + 1).ToString("D3"); // Increment for the next row
+                throw new NotSupportedException($"Key column type '{keyColumn.DataType.Name}' is not supported for auto-generation.");
             }
 
-            return dtInserted; // Return the modified DataTable with new key values
+            return dtInserted;
         }
-
-
 
         public DataTable SearchData(string filterString)
         {
@@ -235,6 +248,43 @@ namespace DatabaseAccessController
             }
 
             return BatchUpdate(sb.ToString());
+        }
+
+        public int InsertOneToManyTables(DataTable dtInsertedOne, DataTable dtInsertedMany, string tableNameOne, string tableNameMany, string singleKey, string[] manyKey)
+        {
+            if (dtInsertedOne == null || dtInsertedMany == null || string.IsNullOrEmpty(tableNameOne) || string.IsNullOrEmpty(tableNameMany))
+            {
+                throw new ArgumentException("The DataTables and table names cannot be null or empty.");
+            } 
+
+            int rowsInsertedOne = InsertTable(dtInsertedOne, tableNameOne, new string[] { singleKey });
+            // As first table is inserted, we can assume that the key values are generated correctly for the second table
+            // Assuming that the first table has a single key and the second table has a foreign key referencing the first table
+            for (int i = 0; i < dtInsertedMany.Rows.Count; i++)
+            {
+                // Set the foreign key value in the second table to match the primary key of the first table
+                dtInsertedMany.Rows[i][singleKey] = dtInsertedOne.Rows[0][singleKey]; // Assuming singleKey is the primary key of the first table
+            }
+            int rowsInsertedMany = InsertTable(dtInsertedMany, tableNameMany, manyKey);
+            return rowsInsertedMany;
+        }
+
+        public int ExecuteNonQuery(string queryString)
+        {
+            if (string.IsNullOrEmpty(queryString))
+            {
+                throw new ArgumentException("The query string cannot be null or empty.", nameof(queryString));
+            }
+            return BatchUpdate(queryString);
+        }
+
+        public DataTable ExecuteGetQuery(string queryString)
+        {
+            if (string.IsNullOrEmpty(queryString))
+            {
+                throw new ArgumentException("The query string cannot be null or empty.", nameof(queryString));
+            }
+            return GetData(queryString);
         }
     }
 }

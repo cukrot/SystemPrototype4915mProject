@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -121,6 +123,59 @@ namespace System_prototype_for_S_S_toy_Co__4915m_Project_
                 // Log any other exceptions
                 MessageBox.Show($"An error occurred: {ex.Message}");
                 throw ex;
+            }
+        }
+
+        internal void ExecuteNonQuery(string endpoint, string sql)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["ServerAddress"]);
+                    string jasonString = JsonConvert.SerializeObject(sql, Formatting.Indented);
+                    StringContent content = new StringContent(jasonString, Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = client.PostAsync(endpoint, content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        string responseString = response.Content.ReadAsStringAsync().Result;
+                        int rowsAffected = int.Parse(responseString);
+                        MessageBox.Show($"{rowsAffected} rows affected.");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+            }
+        }
+
+        internal async Task<DataTable> ExecuteGetTableQuery(string endpoint, string sql)
+        {
+            try
+            {
+                using (HttpClient client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["ServerAddress"]);
+                    string jasonString = JsonConvert.SerializeObject(sql, Formatting.Indented);
+                    StringContent content = new StringContent(jasonString, Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = await client.PostAsync(endpoint, content);
+
+                        string responseString = await response.Content.ReadAsStringAsync();
+                        DataTable dt = Newtonsoft.Json.JsonConvert.DeserializeObject<DataTable>(responseString);
+                        return dt;
+                    
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}");
+                return null;
             }
         }
     }

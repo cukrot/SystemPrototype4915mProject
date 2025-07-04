@@ -199,7 +199,7 @@
             Controls.Add(btnReload);
             Controls.Add(dataGridView1);
             Name = "Form2";
-            Text = "Form2";
+            Text = "View Customer";
             Load += Form2_Load;
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             panel1.ResumeLayout(false);

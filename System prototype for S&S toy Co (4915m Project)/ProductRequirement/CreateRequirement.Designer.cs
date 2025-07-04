@@ -50,6 +50,8 @@
             txtProductID = new TextBox();
             label5 = new Label();
             label6 = new Label();
+            label7 = new Label();
+            txtCustomerID = new TextBox();
             panel2.SuspendLayout();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dtOrderline).BeginInit();
@@ -252,11 +254,29 @@
             label6.TabIndex = 24;
             label6.Text = "Selected Product Name";
             // 
+            // label7
+            // 
+            label7.AutoSize = true;
+            label7.Location = new Point(581, 158);
+            label7.Name = "label7";
+            label7.Size = new Size(76, 15);
+            label7.TabIndex = 26;
+            label7.Text = "Customer ID";
+            // 
+            // txtCustomerID
+            // 
+            txtCustomerID.Location = new Point(581, 176);
+            txtCustomerID.Name = "txtCustomerID";
+            txtCustomerID.Size = new Size(100, 23);
+            txtCustomerID.TabIndex = 25;
+            // 
             // CreateRequirement
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 535);
+            Controls.Add(label7);
+            Controls.Add(txtCustomerID);
             Controls.Add(label6);
             Controls.Add(label5);
             Controls.Add(txtProductID);
@@ -310,5 +330,7 @@
         private TextBox txtProductID;
         private Label label5;
         private Label label6;
+        private Label label7;
+        private TextBox txtCustomerID;
     }
 }

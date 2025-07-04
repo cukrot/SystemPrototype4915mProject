@@ -1,6 +1,6 @@
-﻿namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Delivery
+﻿namespace System_prototype_for_S_S_toy_Co__4915m_Project_.Inventory
 {
-    partial class ViewDeliveryOrder
+    partial class menuInv
     {
         /// <summary>
         /// Required designer variable.
@@ -28,33 +28,44 @@
         /// </summary>
         private void InitializeComponent()
         {
-            dtDOrders = new DataGridView();
-            ((System.ComponentModel.ISupportInitialize)dtDOrders).BeginInit();
+            comboBox1 = new ComboBox();
+            button1 = new Button();
             SuspendLayout();
             // 
-            // dtDOrders
+            // comboBox1
             // 
-            dtDOrders.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dtDOrders.Location = new Point(79, 88);
-            dtDOrders.Name = "dtDOrders";
-            dtDOrders.Size = new Size(412, 240);
-            dtDOrders.TabIndex = 0;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(175, 97);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(121, 23);
+            comboBox1.TabIndex = 0;
             // 
-            // ViewDeliveryOrder
+            // button1
+            // 
+            button1.Location = new Point(184, 185);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 1;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // menuInv
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
-            Controls.Add(dtDOrders);
-            Name = "ViewDeliveryOrder";
-            Text = "ViewDeliveryOrder";
-            Load += ViewDeliveryOrder_Load;
-            ((System.ComponentModel.ISupportInitialize)dtDOrders).EndInit();
+            ClientSize = new Size(501, 384);
+            Controls.Add(button1);
+            Controls.Add(comboBox1);
+            Name = "menuInv";
+            Text = "menuInv";
+            Load += menuInv_Load;
             ResumeLayout(false);
         }
 
         #endregion
 
-        private DataGridView dtDOrders;
+        private ComboBox comboBox1;
+        private Button button1;
     }
 }
